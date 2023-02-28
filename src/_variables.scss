@@ -1,0 +1,63 @@
+
+/* DROPDOWN BUTTON
+*****************************/
+
+$ezmodus-dropdown-border:           1px solid #aeaeae;
+$ezmodus-dropdown-border-radius:    3px;
+$ezmodus-dropdown-background-color: #ffffff;
+$ezmodus-dropdown-color:            #000000;
+$ezmodus-dropdown-width:            auto;
+$ezmodus-dropdown-text-padding:     .375rem 1.75rem .375rem .75rem;
+$ezmodus-dropdown-tick-width:       1rem;
+$ezmodus-dropdown-tick-height:      1rem;
+// if hex is used, then replace # with %23
+$ezmodus-dropdown-tick-color:       '%236c6c6c';
+
+
+/* DROPDOWN MENU
+*****************************/
+
+$ezmodus-menu-background-color:     #ffffff;
+$ezmodus-menu-border:               1px solid #aeaeae;
+$ezmodus-menu-border-radius:        0;
+
+
+/*MENU SEARCH AREA AND INPUT
+*****************************/
+$ezmodus-search-padding:                6px 12px 0 12px;
+$ezmodus-search-input-padding:          12px;
+$ezmodus-search-input-border:           1px solid #d6d6d6;
+$ezmodus-search-input-border-radius:    3px;
+
+
+/* MENU CLEAR AREA AND BUTTON
+*****************************/
+
+$ezmodus-clear-padding:                 6px 12px 3px 12px;
+$ezmodus-clear-button-text-padding:     .375rem 1.75rem .375rem .75rem;
+$ezmodus-clear-button-color:            #6c6c6c;
+$ezmodus-clear-button-background-color: #efefef;
+$ezmodus-clear-button-width:            100%;
+$ezmodus-clear-button-height:           32px;
+$ezmodus-clear-button-border:           1px solid #d6d6d6;
+$ezmodus-clear-button-border-radius:    3px;
+
+
+/* MENU NO RESULTS TEXT
+*****************************/
+
+$ezmodus-no-results-padding: 6px 12px;
+
+
+/* MENU LIST AND ITEMS
+*****************************/
+$ezmodus-list-item-padding:                 6px 12px;
+$ezmodus-list-item-background-color:        transparent;
+$ezmodus-list-item-background-color-hover:  #d6d6d6;
+$ezmodus-list-item-link-min-height:         1.2rem;
+$ezmodus-list-item-link-text-padding:       0 12px 0 0;
+$ezmodus-list-item-checkmark-width:         1.2rem;
+$ezmodus-list-item-checkmark-height:        1.2rem;
+// if hex is used, then replace # with %23
+$ezmodus-list-item-checkmark-color:         '%236c6c6c';
+

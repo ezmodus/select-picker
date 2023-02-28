@@ -1,0 +1,8 @@
+/node_modules
+/dist/*
+!/dist/select.js
+!/dist/bootstrap.js
+!/dist/style.css
+!/dist/demo.css
+!/dist/select.js
+!/dist/*.svg

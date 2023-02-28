@@ -1,0 +1,120 @@
+@import '_variables';
+
+.ezmodus-select {
+
+    position: relative;
+
+    > select {
+        display: none;
+    }
+
+    &:focus-within {
+        .ezmodus-menu {
+            visibility: visible;
+        }
+    }
+
+    .ezmodus-dropdown {
+        display: flex;
+        flex-wrap: nowrap;
+        align-items: center;  
+        border: $ezmodus-dropdown-border;
+        border-radius: $ezmodus-dropdown-border-radius;
+        background-color: $ezmodus-dropdown-background-color;
+        width: $ezmodus-dropdown-width;
+        cursor: pointer;
+        .text {
+            padding: $ezmodus-dropdown-text-padding;
+            color: $ezmodus-dropdown-color;
+            text-align: left;
+            white-space: nowrap;
+        }
+        .tick {
+            display: inline-block;
+            background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><path d="M201.4 406.6c12.5 12.5 32.8 12.5 45.3 0l192-192c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L224 338.7 54.6 169.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3l192 192z" fill="#{$ezmodus-dropdown-tick-color}"/></svg>');
+            background-repeat: no-repeat;
+            width: $ezmodus-dropdown-tick-width;
+            height: $ezmodus-dropdown-tick-height;
+            flex-shrink: 0;
+            flex-grow: 0;
+        }
+    }
+
+    .ezmodus-menu {
+        position: absolute;
+        z-index: 5;
+        visibility: hidden;
+        background-color: $ezmodus-menu-background-color;
+        border: $ezmodus-menu-border;
+        border-radius: $ezmodus-menu-border-radius;
+        transition: height .2s ease-in-out, visibility .2s ease-out;
+
+        .ezmodus-search {
+            padding: $ezmodus-search-padding;
+            input {
+                padding: $ezmodus-search-input-padding;
+                width: 100%;
+                border: $ezmodus-search-input-border;
+                border-radius: $ezmodus-search-input-border-radius;
+            }
+        }
+        .ezmodus-clear {
+            padding: $ezmodus-clear-padding;
+            button {
+                cursor: pointer;
+                width: $ezmodus-clear-button-width;
+                height: $ezmodus-clear-button-height;
+                border: $ezmodus-clear-button-border;
+                border-radius: $ezmodus-clear-button-border-radius;
+                color: $ezmodus-clear-button-color;
+                background-color: $ezmodus-clear-button-background-color;
+            }
+        }
+
+        .no-results {
+            display: none;
+            padding: $ezmodus-no-results-padding;
+        }
+
+        ul {
+            list-style-type: none;
+            overflow-x: hidden;
+            overflow-y: auto;
+            margin: 0;
+            padding: 0;
+            li {
+                white-space: nowrap;
+                padding: $ezmodus-list-item-padding;
+                background-color: $ezmodus-list-item-background-color;
+                &:hover {
+                    background-color: $ezmodus-list-item-background-color-hover;
+                }
+                a {
+                    display: flex;
+                    user-select: none;
+                    cursor: pointer;
+                    align-items: center;
+                    justify-content: space-between;
+                    width: 100%;
+                    min-height: $ezmodus-list-item-link-min-height;
+                    .text {
+                        padding-right: $ezmodus-list-item-link-text-padding;
+                    }
+                    .checkmark {
+                        flex-shrink: 0;
+                        display: none;
+                        background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path d="M470.6 105.4c12.5 12.5 12.5 32.8 0 45.3l-256 256c-12.5 12.5-32.8 12.5-45.3 0l-128-128c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0L192 338.7 425.4 105.4c12.5-12.5 32.8-12.5 45.3 0z" fill="#{$ezmodus-list-item-checkmark-color}"/></svg>');
+                        background-repeat: no-repeat;
+                        width: $ezmodus-list-item-checkmark-width;
+                        height: $ezmodus-list-item-checkmark-height;
+                    }
+                }
+                &.selected {
+                    .checkmark {
+                        display: inline-block;
+                    }
+                }
+            }
+        }
+    }
+}
