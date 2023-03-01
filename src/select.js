@@ -121,10 +121,15 @@ class ezmodusSelectPicker {
         });
     };
 
-    createDropdownButton() {
+    createDropdownButton(select) {
         let button = document.createElement('button');
         button.type = 'button';
         button.classList.add('ezmodus-dropdown');
+        select.classList.forEach(function(klass) {
+            if(klass !== 'ezmodus-select-picker') {
+                button.classList.add(klass);
+            }
+        });
         let span = document.createElement('span');
         span.classList.add('text');
         span.innerText = this.title;
@@ -329,7 +334,15 @@ class ezmodusSelectPicker {
         if(this.size) {
             let el = null;
             if(el = dropdown.querySelector('li')) {
-                this.height += (this.size * el.scrollHeight);
+                let elHeight = 31;
+                if(el.scrollHeight) {
+                    elHeight = el.scrollHeight;
+                } else if(el.offsetHeight) {
+                    elHeight = el.offsetHeight;
+                } else if(el.clientHeight) {
+                    elHeight = el.clientHeight;
+                }
+                this.height += (this.size * elHeight);
             }
             let menu = dropdown.querySelector('.ezmodus-menu ul');
             menu.style.maxHeight = this.height + 2 + 'px';
@@ -343,7 +356,7 @@ class ezmodusSelectPicker {
         // Set dropdown before select and then add select into it
         this.select.parentNode.insertBefore(dropdown, this.select);
         dropdown.appendChild(this.select);
-        this.button = this.createDropdownButton();
+        this.button = this.createDropdownButton(this.select);
         dropdown.appendChild(this.button);
         dropdown.appendChild(this.createMenu());
         this.changeDropdownButton();
@@ -352,6 +365,8 @@ class ezmodusSelectPicker {
     };
 };
 // pickup all selects with the class and do the transition to new picker
-document.querySelectorAll('select.ezmodus-select-picker').forEach(
-    select => new ezmodusSelectPicker(select)
-);
+window.addEventListener('load', function() {
+    document.querySelectorAll('select.ezmodus-select-picker').forEach(
+        select => new ezmodusSelectPicker(select)
+    );
+});

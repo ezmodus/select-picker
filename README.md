@@ -59,6 +59,8 @@ import 'ezmodus-select-picker/src/select';
 
 Simple just add the class `ezmodus-select-picker` to select-element.
 
+You can pass any other class to new dropdown button by just adding extra classes to select-element.
+
 ```html
 <!-- single select -->
 <select class="ezmodus-select-picker">...</select>
