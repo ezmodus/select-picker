@@ -3,6 +3,7 @@
 .ezmodus-select {
 
     position: relative;
+    line-height: 1;
 
     > select {
         display: none;
@@ -17,7 +18,7 @@
     .ezmodus-dropdown {
         display: flex;
         flex-wrap: nowrap;
-        align-items: center;  
+        align-items: center;
         border: $ezmodus-dropdown-border;
         border-radius: $ezmodus-dropdown-border-radius;
         background-color: $ezmodus-dropdown-background-color;
@@ -47,6 +48,7 @@
         background-color: $ezmodus-menu-background-color;
         border: $ezmodus-menu-border;
         border-radius: $ezmodus-menu-border-radius;
+        min-width: $ezmodus-menu-min-width;
         transition: height .2s ease-in-out, visibility .2s ease-out;
 
         .ezmodus-search {
@@ -80,7 +82,7 @@
             list-style-type: none;
             overflow-x: hidden;
             overflow-y: auto;
-            margin: 0;
+            margin: 6px 0 0 0;
             padding: 0;
             li {
                 white-space: nowrap;

@@ -23,6 +23,35 @@ It works pretty much the same as bootstrap-select, but this also adds couple of 
 
 ## Install
 
+```bash
+npm install @ezmodus/select-picker --save
+```
+
+You can prebuilt javascript and styling or do modifications first by loading from source.
+
+```scss
+// from node modules
+// from dist (prebuilt, minified)
+@import '~ezmodus-select-picker/dist/style.css';
+
+// SCSS
+@import '~ezmodus-select-picker/src/_variables.scss';
+
+// change variable settings here
+$ezmodus-dropdown-tick-color: 'red';
+
+// load rest of the styling
+@import '~ezmodus-select-picker/src/style.scss';
+```
+
+```js
+// from node modules
+// from dist (prebuilt, minified)
+import 'ezmodus-select-picker/dist/select';
+
+// from source if you want to modify ezmodusSelectPicker-class
+import 'ezmodus-select-picker/src/select';
+```
 
 ---
 
