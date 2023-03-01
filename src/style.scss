@@ -23,6 +23,7 @@
         border-radius: $ezmodus-dropdown-border-radius;
         background-color: $ezmodus-dropdown-background-color;
         width: $ezmodus-dropdown-width;
+        padding: $ezmodus-dropdown-padding;
         cursor: pointer;
         .text {
             padding: $ezmodus-dropdown-text-padding;
@@ -50,6 +51,9 @@
         border-radius: $ezmodus-menu-border-radius;
         min-width: $ezmodus-menu-min-width;
         transition: height .2s ease-in-out, visibility .2s ease-out;
+        &.with-search {
+            min-width: $ezmodus-menu-search-min-width;
+        }
 
         .ezmodus-search {
             padding: $ezmodus-search-padding;
@@ -103,8 +107,10 @@
                         padding-right: $ezmodus-list-item-link-text-padding;
                     }
                     .checkmark {
+                        display: inline-block;
                         flex-shrink: 0;
-                        display: none;
+                        opacity: 0;
+                        margin-left: 6px;
                         background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path d="M470.6 105.4c12.5 12.5 12.5 32.8 0 45.3l-256 256c-12.5 12.5-32.8 12.5-45.3 0l-128-128c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0L192 338.7 425.4 105.4c12.5-12.5 32.8-12.5 45.3 0z" fill="#{$ezmodus-list-item-checkmark-color}"/></svg>');
                         background-repeat: no-repeat;
                         width: $ezmodus-list-item-checkmark-width;
@@ -113,7 +119,7 @@
                 }
                 &.selected {
                     .checkmark {
-                        display: inline-block;
+                        opacity: 1;
                     }
                 }
             }

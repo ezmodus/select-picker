@@ -1,14 +1,16 @@
 /**
  * Native JS way to pickup all <select> elements which has
  * "ezmodus-select-picker" class.
- * 
+ *
  * Hide default select and inject new div structure with dropdown
  */
 
 class ezmodusSelectPicker {
 
-    button = null;
-    select = null;
+    dropdown = null; // div wrapper (ezmodus-select)
+    button = null; // dropdown button (ezmodus-dropdown)
+    select = null; // original select element
+    menu = null; // div menu (ezmodus-menu)
     isMulti = false;
     tick = true;
     size = null;
@@ -29,7 +31,7 @@ class ezmodusSelectPicker {
     values = [];
     texts = [];
 
-    constructor(select) {  
+    constructor(select) {
         this.select = select;
         this.isMulti = select.multiple;
         this.size = (select.size || undefined) ?? ((this.isMulti) ? 10 : null);
@@ -96,7 +98,6 @@ class ezmodusSelectPicker {
                 picker.selectedItems.forEach(function(i) {
                     options[i].selected = null;
                     items[i].classList.remove('selected');
-                    
                 });
                 picker.selectedItems = [];
             }
@@ -108,7 +109,7 @@ class ezmodusSelectPicker {
                     picker.selectedItems.splice(i, 1);
                 }
             }
-            else { 
+            else {
                 if(picker.max !== null && picker.selectedItems.length == picker.max) {
                     return;
                 }
@@ -270,6 +271,7 @@ class ezmodusSelectPicker {
             input.addEventListener('change', this.addHandlerSearch.bind(input, picker, menu));
             search.appendChild(input);
             menu.appendChild(search);
+            menu.classList.add('with-search');
         }
         // add possibility to clear selection
         if(this.isMulti && this.clearShow) {
@@ -289,6 +291,7 @@ class ezmodusSelectPicker {
         let noresults = document.createElement('div');
         noresults.classList.add('no-results');
         menu.appendChild(noresults);
+        this.menu = menu;
         return menu;
     };
 
@@ -319,7 +322,7 @@ class ezmodusSelectPicker {
 
     /**
      * Calculate height for list items based on select size attribute
-     * @param {*} dropdown 
+     * @param {*} dropdown
      */
     calculateMenuHeight(dropdown) {
         // calculate height for list items
@@ -345,7 +348,7 @@ class ezmodusSelectPicker {
         dropdown.appendChild(this.createMenu());
         this.changeDropdownButton();
         this.calculateMenuHeight(dropdown);
-
+        this.dropdown = dropdown;
     };
 };
 // pickup all selects with the class and do the transition to new picker
