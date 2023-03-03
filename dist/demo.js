@@ -1,0 +1,1 @@
+document.querySelectorAll(".show-button").forEach((function(t){t.addEventListener("click",(function(){document.getElementById(t.dataset.target).classList.toggle("hide")}))}));

@@ -1,6 +1,8 @@
 /node_modules
 /dist/*
+package-lock.json
 !/dist/select.js
+!/dist/demo.js
 !/dist/bootstrap.js
 !/dist/style.css
 !/dist/demo.css

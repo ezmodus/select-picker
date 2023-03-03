@@ -7,69 +7,100 @@
 
 class ezmodusSelectPicker {
 
+    // elements
     dropdown = null; // div wrapper (ezmodus-select)
     button = null; // dropdown button (ezmodus-dropdown)
     select = null; // original select element
     menu = null; // div menu (ezmodus-menu)
-    isMulti = false;
-    tick = true;
-    size = null;
-    max = null;
-    selectedItems = [];
-    height = 0;
-    title = 'Select';
-    isSearch = false;
-    clearShow = false;
-    clearText = 'clear selection';
+    // settings
+    settings = {
+        multiple: false,
+        size: null,
+        title: 'Select',
+        dropdownTick: true,
+        selectedMax: null,
+        selectedText: '{0} selected',
+        menuHeight: 0,
+        menuItemHeight: null,
+        searchShow: false,
+        searchInputPlaceHolder: 'Filter...',
+        searchFrom: null,
+        searchNoResultsText: 'No results matched "{0}"',
+        clearButtonShow: false,
+        clearButtonText: 'clear selection',
+    };
     selectedCount = 1;
-    selectedText = '{0} selected';
-    noResultsText = 'No results matched "{0}"';
-    searchString = '';
-    searchFrom = null;
+    selectedItems = [];
+    // original values without string manipulation
     originals = [];
     // only used in search and are lowercased
     values = [];
     texts = [];
+    searchString = '';
 
     constructor(select) {
         this.select = select;
-        this.isMulti = select.multiple;
-        this.size = (select.size || undefined) ?? ((this.isMulti) ? 10 : null);
+        this.settings.multiple = select.multiple;
+        this.settings.size = (select.size || undefined) ?? ((parseInt(this.settings.size)) ? 10 : null);
         if(select.title) {
-            this.title = select.title;
+            this.settings.title = select.title;
         }
-        if(select.dataset.tick) {
-            this.tick = (select.dataset.tick.toLowerCase() === 'false') ? false : true;
-        }
-        if(select.dataset.maxSelect) {
-            this.max = parseInt(select.dataset.maxSelect);
-        }
-        if(select.dataset.liveSearch) {
-            this.isSearch = (select.dataset.liveSearch.toLowerCase() === 'true') ? true : false;
-        }
-        if(select.dataset.clearShow) {
-            this.clearShow = (select.dataset.clearShow.toLowerCase() === 'true') ? true : false;
-        }
-        if(select.dataset.clearButton) {
-            this.clearText = select.dataset.clearButton;
-        }
-        if(select.dataset.searchFrom) {
-            if(select.dataset.searchFrom == 'values') {
-                this.searchFrom = 'values';
+        /**
+         * Example settings from data attributes
+            data-tick="false"
+            data-search="true"
+            data-search-from="both"
+            data-search-placeholder="Find..."
+            data-search-no-results="No results for {0}"
+            data-selected-count="5"
+            data-selected-text="{0} selected"
+            data-selected-max= "5"
+            data-clear-show="true"
+            data-clear-text="clear"
+            data-menu-item-height=""
+         */
+        Object.entries(select.dataset).forEach(([data, value]) => {
+            switch(data) {
+                case 'tick':
+                    this.settings.dropdownTick = (value.toLowerCase() === 'false') ? false : true;
+                break;
+                case 'search':
+                        this.settings.searchShow = (value.toLowerCase() === 'true') ? true : false;
+                    break;
+                case 'searchPlaceholder':
+                        this.settings.searchInputPlaceHolder = value;
+                    break;
+                case 'searchFrom':
+                    if(value == 'values') {
+                        this.settings.searchFrom = 'values';
+                    }
+                    else if (value == 'both') {
+                        this.settings.searchFrom = 'both';
+                    }
+                    break;
+                case 'searchNoResults':
+                    this.settings.searchNoResultsText = value;
+                    break;
+                case 'selectedCount':
+                    this.selectedCount = parseInt(value);
+                    break;
+                case 'selectedText':
+                    this.settings.selectedText = value;
+                    break;
+                case 'selectedMax':
+                    this.selectedMax = parseInt(value);
+                    break;
+                case 'clearShow':
+                    this.settings.clearButtonShow = (value === 'true') ? true : false;
+                    break;
+                case 'clearText':
+                    this.settings.clearButtonText = value;
+                    break;
+                case 'menuItemHeight':
+                    this.settings.menuItemHeight = parseInt(value);
+                    break;
             }
-            else if (select.dataset.searchFrom == 'both') {
-                this.searchFrom = 'both';
-            }
-        }
-        if(select.dataset.selectedCount) {
-            this.selectedCount = parseInt(select.dataset.selectedCount);
-        }
-        if(select.dataset.selectedText) {
-            this.selectedText = select.dataset.selectedText;
-        }
-        if(select.dataset.noResultsText) {
-            this.noResultsText = select.dataset.noResultsText;
-        }
+        });
         if(select.options.length) {
             for(let i = 0; i < select.options.length; i++) {
                 this.originals[i] = select.options[i].text;
@@ -89,20 +120,19 @@ class ezmodusSelectPicker {
     addHandlerSelect(select, item) {
         let picker = this;
         item.addEventListener('click', function(e) {
-            let li = item.parentNode;
-            let pos = parseInt(li.dataset.pos);
+            let pos = parseInt(item.dataset.pos);
             // if not multi selection then wipe out existing select
-            if(!picker.isMulti) {
+            if(!picker.settings.multiple) {
                 let options = picker.select.querySelectorAll('option');
-                let items = Array.from(li.parentNode.children);
+                let items = Array.from(item.parentNode.children);
                 picker.selectedItems.forEach(function(i) {
                     options[i].selected = null;
                     items[i].classList.remove('selected');
                 });
                 picker.selectedItems = [];
             }
-            if(li.classList.contains('selected')) {
-                li.classList.remove('selected');
+            if(item.classList.contains('selected')) {
+                item.classList.remove('selected');
                 select.options[pos].selected = "";
                 if(picker.selectedItems.length) {
                     let i = picker.selectedItems.indexOf(pos);
@@ -110,21 +140,30 @@ class ezmodusSelectPicker {
                 }
             }
             else {
-                if(picker.max !== null && picker.selectedItems.length == picker.max) {
+                let selectedMax = picker.settings.selectedMax;
+                if(selectedMax !== null && picker.selectedItems.length == selectedMax) {
                     return;
                 }
-                li.classList.add('selected');
+                item.classList.add('selected');
                 select.options[pos].selected = "selected";
                 picker.selectedItems.push(pos);
             }
             picker.changeDropdownButton();
+            // close automatically if not multiple select
+            if(!picker.settings.multiple) {
+                picker.dropdown.classList.remove('open-menu');
+            }
         });
     };
 
-    createDropdownButton(select) {
+    createDropdownButton(dropdown, select) {
+        let picker = this;
         let button = document.createElement('button');
         button.type = 'button';
         button.classList.add('ezmodus-dropdown');
+        button.addEventListener('click', function() {
+            dropdown.classList.toggle('open-menu');
+        });
         select.classList.forEach(function(klass) {
             if(klass !== 'ezmodus-select-picker') {
                 button.classList.add(klass);
@@ -134,7 +173,7 @@ class ezmodusSelectPicker {
         span.classList.add('text');
         span.innerText = this.title;
         button.appendChild(span);
-        if(this.tick) {
+        if(picker.settings.dropdownTick) {
             let icon = document.createElement('i');
             icon.classList.add('tick');
             button.appendChild(icon);
@@ -150,7 +189,7 @@ class ezmodusSelectPicker {
         let btn = document.createElement('button');
         btn.type = 'button';
         btn.name = 'clear';
-        btn.innerHTML = this.clearText;
+        btn.innerHTML = picker.settings.clearButtonText;
         btn.addEventListener('click', function(e) {
             if(picker.selectedItems.length) {
                 let options = picker.select.querySelectorAll('option');
@@ -175,23 +214,37 @@ class ezmodusSelectPicker {
         let li = document.createElement('li');
         li.tabIndex = 0;
         li.dataset.pos = index;
+        this.addHandlerSelect(picker.select, li);
         if(item.selected) {
             li.classList.add('selected');
             picker.selectedItems.push(index);
         }
 
+        let icon = document.createElement('i');
+        icon.classList.add('checkmark');
+
         let span = document.createElement('span');
         span.classList.add('text');
         span.innerHTML = item.text;
 
-        let icon = document.createElement('i');
-        icon.classList.add('checkmark');
-
         let a = document.createElement('a');
-        this.addHandlerSelect(picker.select, a);
-        a.appendChild(span);
-        a.appendChild(icon);
 
+        // wrap icon and span under div and set them under a-element
+        let wrapper = document.createElement('div');
+        wrapper.classList.add('item-wrapper');
+        wrapper.appendChild(icon);
+        wrapper.appendChild(span);
+        a.appendChild(wrapper);
+
+        // if item <option> has data-attribute "desc" then
+        // create extra text area for that information
+        if(item.dataset.desc) {
+            let subtext = document.createElement('div');
+            subtext.classList.add('subtext');
+            subtext.innerHTML = item.dataset.desc;
+            a.appendChild(subtext);
+        }
+        // append the a-element into li-element
         li.appendChild(a);
         return li;
     };
@@ -207,7 +260,7 @@ class ezmodusSelectPicker {
         let indexes = [];
         // Depending on data "search from" value look from texts, values or both
         // loop picker items to find out which position it holds
-        if(picker.searchFrom == 'both') {
+        if(picker.settings.searchFrom == 'both') {
             picker.values.forEach(function(text, position) {
                 if(text.indexOf(lookfor) !== -1) {
                     indexes.push(position);
@@ -219,8 +272,7 @@ class ezmodusSelectPicker {
                 }
             });
         }
-        else if(picker.searchFrom == 'values') {
-            console.log(picker.values);
+        else if(picker.settings.searchFrom == 'values') {
             picker.values.forEach(function(text, position) {
                 if(text.indexOf(lookfor) !== -1) {
                     indexes.push(position);
@@ -251,7 +303,7 @@ class ezmodusSelectPicker {
             noresults.style.display = 'none';
         }
         else {
-            let msg = picker.noResultsText.replace('{0}', lookfor);
+            let msg = picker.settings.searchNoResultsText.replace('{0}', lookfor);
             noresults.innerHTML = msg;
             noresults.style.display = 'block';
         }
@@ -263,15 +315,22 @@ class ezmodusSelectPicker {
         let menu = document.createElement('div');
         menu.classList.add('ezmodus-menu');
         menu.tabIndex = -1;
+        // add close handler if outside of menu
+        menu.addEventListener('focusout', function(e) {
+            if(!e.currentTarget.contains(e.relatedTarget)) {
+                picker.dropdown.classList.remove('open-menu');
+            }
+        });
         // if search is set then create search div
         // and input under it
-        if(this.isSearch) {
+        if(picker.settings.searchShow) {
             let search = document.createElement('div');
             search.classList.add('ezmodus-search');
 
             let input = document.createElement('input');
             input.type = 'search';
             input.autocomplete = 'off';
+            input.placeholder = picker.settings.searchInputPlaceHolder;
             input.addEventListener('keyup', this.addHandlerSearch.bind(input, picker, menu));
             input.addEventListener('change', this.addHandlerSearch.bind(input, picker, menu));
             search.appendChild(input);
@@ -279,7 +338,7 @@ class ezmodusSelectPicker {
             menu.classList.add('with-search');
         }
         // add possibility to clear selection
-        if(this.isMulti && this.clearShow) {
+        if(picker.settings.multiple && picker.settings.clearButtonShow) {
             let clear = this.createClearButton();
             menu.appendChild(clear);
         }
@@ -304,8 +363,8 @@ class ezmodusSelectPicker {
         let picker = this;
         // if no selection then reset
         if(!picker.selectedItems.length) {
-            picker.button.querySelector('span').innerHTML = picker.title;
-            picker.button.querySelector('span').innerText = picker.title;
+            picker.button.querySelector('span').innerHTML = picker.settings.title;
+            picker.button.querySelector('span').innerText = picker.settings.title;
             return;
         }
         // show selection as texts
@@ -320,21 +379,22 @@ class ezmodusSelectPicker {
             return;
         }
         // otherwise replace with data-count-selected-text
-        let text = picker.selectedText.replace('{0}', picker.selectedItems.length);
+        let text = picker.settings.selectedText.replace('{0}', picker.selectedItems.length);
         picker.button.querySelector('span').innerHTML = text;
         picker.button.querySelector('span').innerText = text;
     }
 
     /**
      * Calculate height for list items based on select size attribute
+     * and if menu item height is given then use it to tweak
      * @param {*} dropdown
      */
     calculateMenuHeight(dropdown) {
         // calculate height for list items
-        if(this.size) {
+        if(this.settings.size) {
             let el = null;
             if(el = dropdown.querySelector('li')) {
-                let elHeight = 31;
+                let elHeight = this.settings.menuItemHeight ?? 31;
                 if(el.scrollHeight) {
                     elHeight = el.scrollHeight;
                 } else if(el.offsetHeight) {
@@ -342,10 +402,10 @@ class ezmodusSelectPicker {
                 } else if(el.clientHeight) {
                     elHeight = el.clientHeight;
                 }
-                this.height += (this.size * elHeight);
+                this.settings.menuHeight += (this.settings.size * elHeight);
             }
             let menu = dropdown.querySelector('.ezmodus-menu ul');
-            menu.style.maxHeight = this.height + 2 + 'px';
+            menu.style.maxHeight = this.settings.menuHeight + 2 + 'px';
         }
     };
 
@@ -356,7 +416,7 @@ class ezmodusSelectPicker {
         // Set dropdown before select and then add select into it
         this.select.parentNode.insertBefore(dropdown, this.select);
         dropdown.appendChild(this.select);
-        this.button = this.createDropdownButton(this.select);
+        this.button = this.createDropdownButton(dropdown, this.select);
         dropdown.appendChild(this.button);
         dropdown.appendChild(this.createMenu());
         this.changeDropdownButton();
@@ -365,7 +425,7 @@ class ezmodusSelectPicker {
     };
 };
 // pickup all selects with the class and do the transition to new picker
-window.addEventListener('load', function() {
+document.addEventListener('DOMContentLoaded', function() {
     document.querySelectorAll('select.ezmodus-select-picker').forEach(
         select => new ezmodusSelectPicker(select)
     );

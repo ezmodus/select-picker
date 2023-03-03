@@ -10,6 +10,7 @@ jsConfig = {
   },
   entry: {
     'select': './src/select.js',
+    'demo': './src/demo.js',
     'bootstrap': './src/bootstrap.js',
   },
   output: {

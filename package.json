@@ -1,5 +1,5 @@
 {
-  "name": "ezmodus-select-picker",
+  "name": "@ezmodus/select-picker",
   "version": "1.0.0",
   "description": "Improve HTML <select> element to have live search and better selection process. Written with native JavaScript",
   "main": "index.js",
@@ -7,15 +7,26 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "webpack --config webpack.dev.js",
     "watch": "webpack --config webpack.dev.js --watch",
-    "production": "webpack --config webpack.prod.js"
+    "production": "rm -r dist/* && webpack --config webpack.prod.js"
   },
   "repository": {
     "type": "git",
     "url": "https://github.com/ezmodus/select-picker.git"
   },
   "keywords": [
+    "javascript",
     "select",
-    "picker"
+    "select-multiple",
+    "picker",
+    "native",
+    "vanilla",
+    "native-javascript",
+    "vanilla-javascript",
+    "dropdown",
+    "dropdownmenu",
+    "dropdown-menus",
+    "html-dropdown",
+    "live-search"
   ],
   "author": "Juhani Hakala <juhani.hakala@live.com>",
   "license": "MIT",
@@ -27,8 +38,5 @@
     "sass-loader": "^13.2.0",
     "webpack": "^5.75.0",
     "webpack-cli": "^5.0.1"
-  },
-  "dependencies": {
-
   }
 }

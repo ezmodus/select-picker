@@ -8,16 +8,23 @@
 
 I made this project, because I was updating one of my projects to Bootstrap 5 and I was using boostrap-select (https://github.com/snapappointments/bootstrap-select) which states "Now with bootstrap 5 support" on it's readme file (April 2022).
 
-Unfortunately I noticed that this wasn't the case even living in 2023. I already started to refactor my project and didn't want to rollback just because of this. Therefore I decided to to write from scratch native JS version and also without bootstrap.
+Unfortunately I noticed that this wasn't the case even living in 2023. I already started to refactor my project and I didn't want to rollback just because of this. Therefore I decided to write from scratch native JS version and also without bootstrap.
 
 Because maybe someone else may be in the similar situation I decided to publish this to free use.
 
-It works pretty much the same as bootstrap-select, but this also adds couple of extra features.
+It works pretty much the same as bootstrap-select, but this also adds few extra features.
 
-- Select with multiple adds a button to able to clear the current selected items.
-- With `data-max-select` value able to restrict maximum selection of items.
-- With `data-clear-show` and `data-clear-button` able to decide what to show on clear button.
-- Able to set search also on option-element values side or both.
+---
+
+## Examples
+
+Multi select with default search. Limited select count 1 (more picked changes the dropdown text)
+
+![Multi select with search](/docs/ezmodus-select-dropdown-with-search.jpg)
+
+Multi select with search and clear. Also some options has `data-desc` attribute given with text.
+
+![Multi select with search, clear and option desc](/docs/ezmodus-select-dropdown-full.jpg)
 
 ---
 
@@ -27,30 +34,28 @@ It works pretty much the same as bootstrap-select, but this also adds couple of 
 npm install @ezmodus/select-picker --save
 ```
 
-You can prebuilt javascript and styling or do modifications first by loading from source.
+You can use prebuilt javascript and styling or do modifications first by loading from source.
 
 ```scss
 // from node modules
 // from dist (prebuilt, minified)
-@import '~ezmodus-select-picker/dist/style.css';
+@import '~@ezmodus/select-picker/dist/style.css';
 
 // SCSS
-@import '~ezmodus-select-picker/src/_variables.scss';
-
+@import '~@ezmodus/select-picker/src/_variables.scss';
 // change variable settings here
 $ezmodus-dropdown-tick-color: 'red';
-
 // load rest of the styling
-@import '~ezmodus-select-picker/src/style.scss';
+@import '~@ezmodus/select-picker/src/style.scss';
 ```
 
 ```js
 // from node modules
 // from dist (prebuilt, minified)
-import 'ezmodus-select-picker/dist/select';
+import '@ezmodus/select-picker/dist/select';
 
 // from source if you want to modify ezmodusSelectPicker-class
-import 'ezmodus-select-picker/src/select';
+import '@ezmodus/select-picker/src/select';
 ```
 
 ---
@@ -71,16 +76,25 @@ You can pass any other class to new dropdown button by just adding extra classes
 <!-- more settings -->
 <select class="ezmodus-select-picker"
     size="6"
-    title="Choose car brands"
-    data-live-search="true"
-    data-count-selected-text="{0} selected"
-    data-selected-count="3"
-    data-no-results-text="No results"
-    data-max-select="3"
+    title="Choose your role"
+    data-tick="false"
+    data-search="true"
+    data-search-from="both"
+    data-search-placeholder="Find..."
+    data-search-no-results="No results for {0}"
+    data-selected-count="5"
+    data-selected-text="{0} selected"
+    data-selected-max= "5"
     data-clear-show="true"
-    data-clear-button="clear my selection"
-    data-live-search="true" multiple>
+    data-clear-text="clear"
+    data-menu-item-height=""
+     multiple>
     <!-- my option data -->
+    <option value="1">Superuser</option>
+    <option value="2">Normal user</option>
+    <option value="3" data-desc="Special user, this is injected as subtext">
+        Test user
+    </option>
 </select>
 ```
 
@@ -88,19 +102,38 @@ These can be modified a lot to give more richer tools to use.
 
 ### Variables
 
+**SELECT ATTRIBUTES**
+
+| Attribute             | Default   | Description
+|-----------------------|---------------------------|-----------------
+| size                  | null / 10 | How many items are shown when dropdown opens. Single selection all (null), for multiple defaults to 10. If select has more items than defined size then show scrollbar
+| title                 | Select    | Text, what to show on when no selection on dropdown
+| multiple              |           | Activates multiple selection support
+
+**SELECT DATA ATTRIBUTES**
+
+Add these attributes with prefix `data-`.
+
 | Attribute             | Default                   | Description
 |-----------------------|---------------------------|-----------------
-| size                  | null / 10                 | How many items are shown when dropdown opens. Single selection all (null), for multiple defaults to 10.
-| title                 | Select                    | Text, what to show on when no selection on dropdown
-| data-live-search      | false                     | If 'true' then show search input for list items
-| data-search-from      | null                      | Search from texts, if "values" then search looks values of "option value", if "both" then look for values or texts
-| data-clear-show       | false                     | Only for multiple, but if 'true' then show button before the list to clear/reset existing selections
-| data-clear-button     | clear selection           | Default text for the button
-| data-max-select       | null                      | Integer, limits maximum select count
-| data-selected-count   | 1                         | How many selections are shown until replacement (data-selected-text)
-| data-selected-text    | {0} selected              | How many are selected, notice {0} is replacement variable to replace select count, works without it too.
-| data-no-results-text  | No results matched "{0}"  | When search does not find anything then this is the message, notice {0} is replacement variable and will be replaced by the search string, works without it too.
-| data-tick             | true                      | shows tick on dropdown
+| tick                  | true                      | Shows tick on dropdown.
+| search                | false                     | If 'true' then show search input for list items.
+| search-from           | null                      | Search from texts, if "values" then search looks values of "option value", if "both" then look for values or texts.
+| search-placeholder    | Filter...                 | Placeholder text for search input.
+| search-no-results     | No results matched "{0}"  | When with given string search does not find anything, this is the message to show, {0} is magic and will be replaced with given input.
+| selected-count        | 1                         | How many items are shown until dropdown text is replaced with "selected-text"
+| selected-text         | {0} selected              | When too many items are selected this is the text shown in dropdown, {0} is magic and replaced with count of selected items.
+| selected-max          | null                      | Integer, limits how many items are allowed to pick on multi select
+| clear-show            | false                     | Only for multiple, but if 'true' then show button before the list to clear/reset existing selections
+| clear-text            | clear selection           | Default text for the clear selection button
+| menu-item-height      | null                      | This is only for special cases where parent node is `display:none`. Picker normally uses offsetHeight to determine the height of the menu item. When select is already hidden, it cannot see the value correctly. If this is the case the default height is 31, but if you do custom styling then this is the way to correct it further.
+
+**SELECT'S OPTION ATTRIBUTE**
+
+| Attribute | Default   | Description
+|-----------|-----------|--------------
+| data-desc |           | Text data to show as extra description with own styling. If texts are used then size of the menu is direcctive because items heights varies.
+
 
 ---
 
@@ -108,6 +141,7 @@ These can be modified a lot to give more richer tools to use.
 
 Super simple setup
 
+- Git clone the project
 - Run `npm install`
 - Run `npm build|watch|production`
 - View Demo under `demo/index.html`

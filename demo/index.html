@@ -6,12 +6,15 @@
     <title>ezmodus select picker</title>
     <link href="../dist/style.css" rel="stylesheet" />
     <link href="../dist/demo.css" rel="stylesheet" />
+    <script src="../dist/bootstrap.js" defer></script>
+    <script src="../dist/select.js" defer></script>
+    <script src="../dist/demo.js" defer></script>
 </head>
 <body>
 
     <div class="testarea">
         <div class="testbox">
-            <label>Single select (without size)</label>
+            <label>Single select (just a class)</label>
             <select class="ezmodus-select-picker">
                 <option value="Alfa Romeo">Alfa Romeo</option>
                 <option value="Aston Martin">Aston Martin</option>
@@ -42,8 +45,8 @@
         </div>
 
         <div class="testbox">
-            <label>Single select (with size 4)</label>
-            <select class="ezmodus-select-picker copy-class" size="4">
+            <label>Single select (with size 6)</label>
+            <select class="ezmodus-select-picker copy-test-class" size="6">
                 <option value="Alfa Romeo">Alfa Romeo</option>
                 <option value="Aston Martin">Aston Martin</option>
                 <option value="Audi">Audi</option>
@@ -73,8 +76,8 @@
         </div>
 
         <div class="testbox">
-            <label>Multiple with size change 6</label>
-            <select class="ezmodus-select-picker" size="6" multiple>
+            <label>Multiple with size change 8</label>
+            <select class="ezmodus-select-picker" size="8" multiple>
                 <option value="Alfa Romeo">Alfa Romeo</option>
                 <option value="Aston Martin">Aston Martin</option>
                 <option value="Audi">Audi</option>
@@ -105,7 +108,7 @@
 
         <div class="testbox">
             <label>Multiple with size change 6 (live search)</label>
-            <select class="ezmodus-select-picker" size="6" data-live-search="true" multiple>
+            <select class="ezmodus-select-picker" size="6" data-search="true" multiple>
                 <option value="Alfa Romeo">Alfa Romeo</option>
                 <option value="Aston Martin">Aston Martin</option>
                 <option value="Audi">Audi</option>
@@ -135,20 +138,26 @@
         </div>
 
         <div class="testbox">
-            <label>Multiple with size 9 (max 5) (search)</label>
-            <select class="ezmodus-select-picker" size="9"
+            <label>Multiple with size 8 (max 5) (full implementation)</label>
+            <select class="ezmodus-select-picker"
+                size="8"
                 title="Choose car brands"
-                data-live-search="true"
-                data-selected-count="3"
+                data-search="true"
+                data-search-from="both"
+                data-search-placeholder="Find..."
+                data-search-no-results="No results for {0}"
                 data-selected-text="{0} selected"
-                data-no-results-text="No results"
-                data-max-select="5"
+                data-selected-count="3"
+                data-selected-max= "5"
                 data-clear-show="true"
-                data-clear-button="clear"
-                data-live-search="true" multiple>
-                    <option value="Beta Juliet">Alfa Romeo</option>
-                    <option value="Ästen Märtin">Aston Martin</option>
-                    <option value="The one" selected>Audi</option>
+                multiple>
+                    <option value="Beta Juliet" data-desc="It looks nice from front">Alfa Romeo</option>
+                    <option value="Ästen Märtin"
+                        data-desc="James Bond likes to use these on the movies since 1950s to current year."
+                        selected>
+                        Aston Martin
+                    </option>
+                    <option value="The one" data-desc="My favourite car" selected>Audi</option>
                     <option value="Beetly">Bentley</option>
                     <option value="Bemari">BMW</option>
                     <option value="Kadilakki" selected>Cadillac</option>
@@ -174,9 +183,33 @@
             </select>
         </div>
 
-    </div>
+        <div class="testbox">
+            <div>Test when select is inside hidden element and size is not existing</div>
+            <button type="button" class="show-button" data-target="hidden-element">Show select</button>
+            <div id="hidden-element" class="testbox hide">
+                <label>Multiple with size</label>
+                <select class="ezmodus-select-picker" size="4"
+                    title="Choose car brands"
+                    data-search="true"
+                    data-clear-show="true"
+                    data-clear-button="Tyhjennä"
+                    data-live-search="true" multiple>
+                        <option value="Beta Juliet">Alfa Romeo</option>
+                        <option value="Ästen Märtin">Aston Martin</option>
+                        <option value="The one" selected>Audi</option>
+                        <option value="Beetly">Bentley</option>
+                        <option value="Bemari">BMW</option>
+                        <option value="Kadilakki" selected>Cadillac</option>
+                        <option value="Chevy">Chevrolet</option>
+                        <option value="Kraisler">Chrysler</option>
+                        <option value="Dacia">Dacia</option>
+                        <option value="Datsun">Datsun</option>
+                        <option value="Dodge">Dodge</option>
+                        <option value="Ferrari">Ferrari</option>
+                </select>
+            </div>
+        </div>
 
-    <script src="../dist/bootstrap.js" defer></script>
-    <script src="../dist/select.js" defer></script>
+    </div>
 </body>
 </html>

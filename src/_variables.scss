@@ -1,3 +1,11 @@
+@function str-replace($string, $search, $replace: '') {
+    $index: str-index($string, $search);
+    @if $index {
+      @return str-slice($string, 1, $index - 1) + $replace + str-replace(str-slice($string, $index + str-length($search)), $search, $replace);
+    }
+    @return $string;
+}
+
 
 /* DROPDOWN BUTTON
 *****************************/
@@ -11,8 +19,7 @@ $ezmodus-dropdown-padding:          0 6px 1px 0 !default;
 $ezmodus-dropdown-text-padding:     .375rem 1.75rem .375rem .75rem !default;
 $ezmodus-dropdown-tick-width:       1rem !default;
 $ezmodus-dropdown-tick-height:      1rem !default;
-// if hex is used, then replace # with %23
-$ezmodus-dropdown-tick-color:       '%236c6c6c' !default;
+$ezmodus-dropdown-tick-color:       '#6c6c6c' !default;
 
 
 /* DROPDOWN MENU
@@ -22,7 +29,9 @@ $ezmodus-menu-background-color:     #ffffff !default;
 $ezmodus-menu-border:               1px solid #ced4da !default;
 $ezmodus-menu-border-radius:        3px 3px 0 0 !default;
 $ezmodus-menu-min-width:            120px !default;
+$ezmodus-menu-max-width:            auto !default;
 $ezmodus-menu-search-min-width:     168px !default;
+$ezmodus-menu-search-max-width:     auto !default;
 
 
 /*MENU SEARCH AREA AND INPUT
@@ -59,8 +68,9 @@ $ezmodus-list-item-background-color:        transparent !default;
 $ezmodus-list-item-background-color-hover:  #d6d6d6 !default;
 $ezmodus-list-item-link-min-height:         1.2rem !default;
 $ezmodus-list-item-link-text-padding:       0 12px 0 0 !default;
-$ezmodus-list-item-checkmark-width:         1.2rem !default;
-$ezmodus-list-item-checkmark-height:        1.2rem !default;
-// if hex is used, then replace # with %23
-$ezmodus-list-item-checkmark-color:         '%236c6c6c' !default;
+$ezmodus-list-item-checkmark-width:         1rem !default;
+$ezmodus-list-item-checkmark-height:        1rem !default;
+$ezmodus-list-item-checkmark-color:         '#6c6c6c' !default;
+$ezmodus-list-item-subtext-color:           #6c6c6c !default;
+$ezmodus-list-item-subtext-padding:         6px 0 3px $ezmodus-list-item-checkmark-width;
 

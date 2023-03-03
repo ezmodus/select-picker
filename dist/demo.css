@@ -1,1 +1,1 @@
-body .testarea{display:flex;flex-wrap:wrap}body .testarea .testbox{margin:1rem 2rem}body .testarea .testbox label{display:block;margin-bottom:1rem;font-weight:bold}
+body .testarea{display:flex;flex-wrap:wrap}body .testarea .testbox{margin:1rem 1rem 6rem 1rem}body .testarea .testbox.hide{display:none}body .testarea .testbox label{display:block;margin-bottom:1rem;font-weight:bold}

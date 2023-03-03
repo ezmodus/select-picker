@@ -5,7 +5,10 @@ body {
         display: flex;
         flex-wrap: wrap;
         .testbox {
-            margin: 1rem 2rem;
+            margin: 1rem 1rem 6rem 1rem;
+            &.hide {
+                display: none;
+            }
             label {
                 display: block;
                 margin-bottom: 1rem;

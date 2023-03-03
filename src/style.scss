@@ -9,7 +9,7 @@
         display: none;
     }
 
-    &:focus-within {
+    &.open-menu {
         .ezmodus-menu {
             visibility: visible;
         }
@@ -34,7 +34,7 @@
         }
         .tick {
             display: inline-block;
-            background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><path d="M201.4 406.6c12.5 12.5 32.8 12.5 45.3 0l192-192c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L224 338.7 54.6 169.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3l192 192z" fill="#{$ezmodus-dropdown-tick-color}"/></svg>');
+            background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><path d="M201.4 406.6c12.5 12.5 32.8 12.5 45.3 0l192-192c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L224 338.7 54.6 169.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3l192 192z" fill="#{str-replace($ezmodus-dropdown-tick-color, "#", "%23")}"/></svg>');
             background-repeat: no-repeat;
             width: $ezmodus-dropdown-tick-width;
             height: $ezmodus-dropdown-tick-height;
@@ -51,9 +51,11 @@
         border: $ezmodus-menu-border;
         border-radius: $ezmodus-menu-border-radius;
         min-width: $ezmodus-menu-min-width;
+        max-width: $ezmodus-menu-max-width;
         transition: height .2s ease-in-out, visibility .2s ease-out;
         &.with-search {
             min-width: $ezmodus-menu-search-min-width;
+            max-width: $ezmodus-menu-search-max-width;
         }
 
         .ezmodus-search {
@@ -90,7 +92,6 @@
             margin: 6px 0 0 0;
             padding: 0;
             li {
-                white-space: nowrap;
                 padding: $ezmodus-list-item-padding;
                 background-color: $ezmodus-list-item-background-color;
                 &:hover {
@@ -98,29 +99,41 @@
                 }
                 a {
                     display: flex;
+                    flex-direction: column;
                     user-select: none;
                     cursor: pointer;
-                    align-items: center;
-                    justify-content: space-between;
                     width: 100%;
                     min-height: $ezmodus-list-item-link-min-height;
-                    .text {
-                        padding-right: $ezmodus-list-item-link-text-padding;
+                    .item-wrapper {
+                        display: flex;
+                        align-items: center;
+                        .checkmark {
+                            display: inline-block;
+                            flex-shrink: 0;
+                            opacity: 0;
+                            margin-right: 6px;
+                            background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path d="M470.6 105.4c12.5 12.5 12.5 32.8 0 45.3l-256 256c-12.5 12.5-32.8 12.5-45.3 0l-128-128c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0L192 338.7 425.4 105.4c12.5-12.5 32.8-12.5 45.3 0z" fill="#{str-replace($ezmodus-list-item-checkmark-color, "#", "%23")}"/></svg>');
+                            background-repeat: no-repeat;
+                            width: $ezmodus-list-item-checkmark-width;
+                            height: $ezmodus-list-item-checkmark-height;
+                        }
+                        .text {
+                            padding-right: $ezmodus-list-item-link-text-padding;
+                        }
                     }
-                    .checkmark {
-                        display: inline-block;
-                        flex-shrink: 0;
-                        opacity: 0;
-                        margin-left: 6px;
-                        background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path d="M470.6 105.4c12.5 12.5 12.5 32.8 0 45.3l-256 256c-12.5 12.5-32.8 12.5-45.3 0l-128-128c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0L192 338.7 425.4 105.4c12.5-12.5 32.8-12.5 45.3 0z" fill="#{$ezmodus-list-item-checkmark-color}"/></svg>');
-                        background-repeat: no-repeat;
-                        width: $ezmodus-list-item-checkmark-width;
-                        height: $ezmodus-list-item-checkmark-height;
+                    .subtext {
+                        color: $ezmodus-list-item-subtext-color;
+                        // calculate from checkmark space how much indent
+                        // is required for subtext
+                        margin-left: 6px; // must be same with checkmark margin-right
+                        padding: $ezmodus-list-item-subtext-padding;
                     }
                 }
                 &.selected {
-                    .checkmark {
-                        opacity: 1;
+                    .item-wrapper {
+                        .checkmark {
+                            opacity: 1;
+                        }
                     }
                 }
             }
