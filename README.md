@@ -18,6 +18,10 @@ It works pretty much the same as bootstrap-select, but this also adds few extra 
 
 ## Release notes
 
+- [1.0.2, March 5, 2023](/docs/release-notes.md#1.0.2)
+
+    Distribution files were development format, updated to production and minified.
+
 - [1.0.1, March 5, 2023](/docs/release-notes.md#1.0.1)
 
     Menu fixes, SCSS variables and tweaks, `<option>` extension.

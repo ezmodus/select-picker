@@ -1,5 +1,11 @@
 # Release notes
 
+## 1.0.2
+
+ -  **Distribution files**
+
+    Distribution files were development format, updated to production and minified.
+
 ## 1.0.1
 
 - **Fixed dropdown focusout**
