@@ -30,7 +30,7 @@ $ezmodus-menu-border:               1px solid #ced4da !default;
 $ezmodus-menu-border-radius:        3px 3px 0 0 !default;
 $ezmodus-menu-min-width:            120px !default;
 $ezmodus-menu-max-width:            auto !default;
-$ezmodus-menu-search-min-width:     168px !default;
+$ezmodus-menu-search-min-width:     180px !default;
 $ezmodus-menu-search-max-width:     auto !default;
 
 
@@ -63,14 +63,18 @@ $ezmodus-no-results-padding: 6px 12px !default;
 
 /* MENU LIST AND ITEMS
 *****************************/
-$ezmodus-list-item-padding:                 6px 12px !default;
-$ezmodus-list-item-background-color:        transparent !default;
-$ezmodus-list-item-background-color-hover:  #d6d6d6 !default;
-$ezmodus-list-item-link-min-height:         1.2rem !default;
-$ezmodus-list-item-link-text-padding:       0 12px 0 0 !default;
-$ezmodus-list-item-checkmark-width:         1rem !default;
-$ezmodus-list-item-checkmark-height:        1rem !default;
-$ezmodus-list-item-checkmark-color:         '#6c6c6c' !default;
-$ezmodus-list-item-subtext-color:           #6c6c6c !default;
-$ezmodus-list-item-subtext-padding:         6px 0 3px $ezmodus-list-item-checkmark-width;
+$ezmodus-list-item-padding:                     6px 12px !default;
+$ezmodus-list-item-color:                       #000000 !default;
+$ezmodus-list-item-background-color:            transparent !default;
+$ezmodus-list-item-background-color-hover:      #d6d6d6 !default;
+$ezmodus-list-item-link-min-height:             1.2rem !default;
+$ezmodus-list-item-link-text-padding:           0 12px 0 0 !default;
+$ezmodus-list-item-checkmark-width:             1rem !default;
+$ezmodus-list-item-checkmark-height:            1rem !default;
+$ezmodus-list-item-checkmark-color:             '#6c6c6c' !default;
+$ezmodus-list-item-subtext-color:               #6c6c6c !default;
+$ezmodus-list-item-subtext-padding:             6px 0 3px $ezmodus-list-item-checkmark-width;
+$ezmodus-list-item-disabled-color:              #999999 !default;
+$ezmodus-list-item-disabled-background-color:   transparent !default;
+
 

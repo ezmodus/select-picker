@@ -113,47 +113,67 @@ class ezmodusSelectPicker {
     };
 
     /**
-     * Add event listener
-     * @param {*} select select-element
+     * Actual event for selecting item
+     * To support multiple ways to select
+     * @param {*} picker
+     * @param {*} item
+     */
+    selectMenuItem(picker, e) {
+        let item = this;
+        // Keyboard event
+        if(e.type === 'keydown') {
+            // if not Space then proceed normally, but do not let
+            // rest of the actions happen
+            if(e.code !== 'Space') {
+                return;
+            }
+            // Normally space scrolls the menu if scrollbar exists
+            // prevent this
+            e.preventDefault();
+        }
+        let pos = parseInt(item.dataset.pos);
+        // if not multi selection then wipe out existing select
+        if(!picker.settings.multiple) {
+            let options = picker.select.querySelectorAll('option');
+            let items = Array.from(item.parentNode.children);
+            picker.selectedItems.forEach(function(i) {
+                options[i].selected = null;
+                items[i].classList.remove('selected');
+            });
+            picker.selectedItems = [];
+        }
+        if(item.classList.contains('selected')) {
+            item.classList.remove('selected');
+            picker.select.options[pos].selected = "";
+            if(picker.selectedItems.length) {
+                let i = picker.selectedItems.indexOf(pos);
+                picker.selectedItems.splice(i, 1);
+            }
+        }
+        else {
+            let selectedMax = picker.settings.selectedMax;
+            if(selectedMax !== null && picker.selectedItems.length == selectedMax) {
+                return;
+            }
+            item.classList.add('selected');
+            picker.select.options[pos].selected = "selected";
+            picker.selectedItems.push(pos);
+        }
+        picker.changeDropdownButton();
+        // close automatically if not multiple select
+        if(!picker.settings.multiple) {
+            picker.dropdown.classList.remove('open-menu');
+        }
+    }
+
+    /**
+     * Add event listeners for the menu item
+     * @param {*} picker dropdown-element
      * @param {*} item is a-element
      */
-    addHandlerSelect(select, item) {
-        let picker = this;
-        item.addEventListener('click', function(e) {
-            let pos = parseInt(item.dataset.pos);
-            // if not multi selection then wipe out existing select
-            if(!picker.settings.multiple) {
-                let options = picker.select.querySelectorAll('option');
-                let items = Array.from(item.parentNode.children);
-                picker.selectedItems.forEach(function(i) {
-                    options[i].selected = null;
-                    items[i].classList.remove('selected');
-                });
-                picker.selectedItems = [];
-            }
-            if(item.classList.contains('selected')) {
-                item.classList.remove('selected');
-                select.options[pos].selected = "";
-                if(picker.selectedItems.length) {
-                    let i = picker.selectedItems.indexOf(pos);
-                    picker.selectedItems.splice(i, 1);
-                }
-            }
-            else {
-                let selectedMax = picker.settings.selectedMax;
-                if(selectedMax !== null && picker.selectedItems.length == selectedMax) {
-                    return;
-                }
-                item.classList.add('selected');
-                select.options[pos].selected = "selected";
-                picker.selectedItems.push(pos);
-            }
-            picker.changeDropdownButton();
-            // close automatically if not multiple select
-            if(!picker.settings.multiple) {
-                picker.dropdown.classList.remove('open-menu');
-            }
-        });
+    addHandlerSelect(picker, item) {
+        item.addEventListener('keydown', this.selectMenuItem.bind(item, picker));
+        item.addEventListener('click', this.selectMenuItem.bind(item, picker));
     };
 
     createDropdownButton(dropdown, select) {
@@ -214,11 +234,22 @@ class ezmodusSelectPicker {
         let li = document.createElement('li');
         li.tabIndex = 0;
         li.dataset.pos = index;
-        this.addHandlerSelect(picker.select, li);
+
         if(item.selected) {
             li.classList.add('selected');
             picker.selectedItems.push(index);
         }
+        // handle disabled
+        if(item.disabled) {
+            li.dataset.disabled = "true";
+        }
+        // if not disabled add click event to select
+        else {
+            this.addHandlerSelect(picker, li);
+        }
+        item.classList.forEach(function(klass) {
+            li.classList.add(klass);
+        });
 
         let icon = document.createElement('i');
         icon.classList.add('checkmark');
@@ -315,12 +346,6 @@ class ezmodusSelectPicker {
         let menu = document.createElement('div');
         menu.classList.add('ezmodus-menu');
         menu.tabIndex = -1;
-        // add close handler if outside of menu
-        menu.addEventListener('focusout', function(e) {
-            if(!e.currentTarget.contains(e.relatedTarget)) {
-                picker.dropdown.classList.remove('open-menu');
-            }
-        });
         // if search is set then create search div
         // and input under it
         if(picker.settings.searchShow) {
@@ -421,6 +446,11 @@ class ezmodusSelectPicker {
         dropdown.appendChild(this.createMenu());
         this.changeDropdownButton();
         this.calculateMenuHeight(dropdown);
+        dropdown.addEventListener('focusout', function(e) {
+            if(!e.currentTarget.contains(e.relatedTarget)) {
+                dropdown.classList.remove('open-menu');
+            }
+        });
         this.dropdown = dropdown;
     };
 };

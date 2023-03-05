@@ -16,11 +16,23 @@ It works pretty much the same as bootstrap-select, but this also adds few extra 
 
 ---
 
+## Release notes
+
+- [1.0.1, March 5, 2023](/docs/release-notes.md#1.0.1)
+
+    Menu fixes, SCSS variables and tweaks, `<option>` extension.
+
+---
+
 ## Examples
 
 Multi select with default search. Limited select count 1 (more picked changes the dropdown text)
 
 ![Multi select with search](/docs/ezmodus-select-dropdown-with-search.jpg)
+
+Multi select with disabled options and option with passed extra class with styling.
+
+![Multi select with search](/docs/ezmodus-select-dropdown-disabled-and-class.jpg)
 
 Multi select with search and clear. Also some options has `data-desc` attribute given with text.
 
@@ -74,7 +86,18 @@ You can pass any other class to new dropdown button by just adding extra classes
 <select class="ezmodus-select-picker" multiple>...</select>
 
 <!-- more settings -->
-<select class="ezmodus-select-picker"
+<!--
+Any other class than picker itself in select-element
+will be passed to dropdown button as extra class.
+
+Any class given to option will be passed to menu li-element.
+
+If option is set as disabled, then li-element has data-disabled="true",
+otherwise the attribute does not exist.
+
+These helps developer even further to manipulate dropdown and items.
+-->
+<select class="ezmodus-select-picker another-class"
     size="6"
     title="Choose your role"
     data-tick="false"
@@ -133,7 +156,6 @@ Add these attributes with prefix `data-`.
 | Attribute | Default   | Description
 |-----------|-----------|--------------
 | data-desc |           | Text data to show as extra description with own styling. If texts are used then size of the menu is direcctive because items heights varies.
-
 
 ---
 

@@ -93,20 +93,38 @@
             padding: 0;
             li {
                 padding: $ezmodus-list-item-padding;
+                color: $ezmodus-list-item-color;
                 background-color: $ezmodus-list-item-background-color;
-                &:hover {
+                cursor: pointer;
+                &:hover:not([data-disabled="true"]) {
                     background-color: $ezmodus-list-item-background-color-hover;
+                }
+                &.selected {
+                    .item-wrapper {
+                        .checkmark {
+                            opacity: 1;
+                        }
+                    }
+                }
+                &[data-disabled="true"] {
+                    cursor: initial;
+                    color: $ezmodus-list-item-disabled-color;
+                    background-color: $ezmodus-list-item-disabled-background-color;
+                    a {
+                        .subtext {
+                            color: $ezmodus-list-item-disabled-color;
+                        }
+                    }
                 }
                 a {
                     display: flex;
                     flex-direction: column;
                     user-select: none;
-                    cursor: pointer;
                     width: 100%;
                     min-height: $ezmodus-list-item-link-min-height;
                     .item-wrapper {
                         display: flex;
-                        align-items: center;
+                        align-items: flex-start;
                         .checkmark {
                             display: inline-block;
                             flex-shrink: 0;
@@ -127,13 +145,6 @@
                         // is required for subtext
                         margin-left: 6px; // must be same with checkmark margin-right
                         padding: $ezmodus-list-item-subtext-padding;
-                    }
-                }
-                &.selected {
-                    .item-wrapper {
-                        .checkmark {
-                            opacity: 1;
-                        }
                     }
                 }
             }
