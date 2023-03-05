@@ -1,6 +1,6 @@
 {
   "name": "@ezmodus/select-picker",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Improve HTML <select> element to have live search and better selection process. Written with native JavaScript",
   "main": "index.js",
   "scripts": {
