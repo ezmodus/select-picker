@@ -15,8 +15,10 @@
     <div class="testarea">
         <div class="testbox">
             <label>Single select (just a class)</label>
-            <select class="ezmodus-select-picker">
-                <option value="Alfa Romeo">Alfa Romeo</option>
+            <select class="ezmodus-select-picker" role="button" aria-hidden="false">
+                <option value="Alfa Romeo" role="option" aria-hidden="false" aria-label="Alfa Romeo">
+                    Alfa Romeo
+                </option>
                 <option value="Aston Martin">Aston Martin</option>
                 <option value="Audi">Audi</option>
                 <option value="Bentley">Bentley</option>
@@ -74,6 +76,28 @@
                 <option value="Suzuki">Suzuki</option>
             </select>
         </div>
+
+        <div class="testbox">
+            <label>Select + data-desc</label>
+            <select class="ezmodus-select-picker">
+                <option value="1" data-desc="This could be very long text to describe the very short text">
+                    Yes
+                </option>
+                <option value="2" data-desc="Sometimes even this means Yes">No</option>
+            </select>
+            <br />
+            <label>Same + data-dynamic</label>
+            <select class="ezmodus-select-picker" data-dynamic="-100">
+                <option value="1" data-desc="This could be very long text to describe the very short text">
+                    Yes
+                </option>
+                <option value="2" data-desc="Sometimes even this means Yes">No</option>
+            </select>
+        </div>
+        <div class="testbox">Yes</div>
+        <div class="testbox">This could be very long text to describe the very short text</div>
+        <div class="testbox">No</div>
+        <div class="testbox">Sometimes even this means Yes</div>
 
         <div class="testbox">
             <label>Multiple with size change 8</label>
@@ -178,7 +202,7 @@
                 data-search="true"
                 data-search-from="both"
                 data-search-placeholder="Find..."
-                data-search-no-results="No results for {0}"
+                data-search-no-results="No results with string '{0}'"
                 data-selected-text="{0} selected"
                 data-selected-count="3"
                 data-selected-max= "5"

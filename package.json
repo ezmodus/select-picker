@@ -33,10 +33,10 @@
   "devDependencies": {
     "bootstrap": "^5.2.3",
     "css-loader": "^6.7.3",
-    "mini-css-extract-plugin": "^2.7.2",
-    "sass": "^1.58.3",
+    "mini-css-extract-plugin": "^2.7.3",
+    "sass": "^1.59.2",
     "sass-loader": "^13.2.0",
-    "webpack": "^5.75.0",
+    "webpack": "^5.76.1",
     "webpack-cli": "^5.0.1"
   }
 }

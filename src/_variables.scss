@@ -28,10 +28,10 @@ $ezmodus-dropdown-tick-color:       '#6c6c6c' !default;
 $ezmodus-menu-background-color:     #ffffff !default;
 $ezmodus-menu-border:               1px solid #ced4da !default;
 $ezmodus-menu-border-radius:        3px 3px 0 0 !default;
-$ezmodus-menu-min-width:            120px !default;
-$ezmodus-menu-max-width:            auto !default;
-$ezmodus-menu-search-min-width:     180px !default;
-$ezmodus-menu-search-max-width:     auto !default;
+$ezmodus-menu-min-width:            144px !default;
+$ezmodus-menu-max-width:            initial !default;
+$ezmodus-menu-search-min-width:     192px !default;
+$ezmodus-menu-search-max-width:     initial !default;
 
 
 /*MENU SEARCH AREA AND INPUT
@@ -73,7 +73,7 @@ $ezmodus-list-item-checkmark-width:             1rem !default;
 $ezmodus-list-item-checkmark-height:            1rem !default;
 $ezmodus-list-item-checkmark-color:             '#6c6c6c' !default;
 $ezmodus-list-item-subtext-color:               #6c6c6c !default;
-$ezmodus-list-item-subtext-padding:             6px 0 3px $ezmodus-list-item-checkmark-width;
+$ezmodus-list-item-subtext-padding:             6px 0 3px $ezmodus-list-item-checkmark-width !default;
 $ezmodus-list-item-disabled-color:              #999999 !default;
 $ezmodus-list-item-disabled-background-color:   transparent !default;
 

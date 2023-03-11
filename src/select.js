@@ -22,6 +22,7 @@ class ezmodusSelectPicker {
         selectedText: '{0} selected',
         menuHeight: 0,
         menuItemHeight: null,
+        menuDynamic: null,
         searchShow: false,
         searchInputPlaceHolder: 'Filter...',
         searchFrom: null,
@@ -99,6 +100,10 @@ class ezmodusSelectPicker {
                 case 'menuItemHeight':
                     this.settings.menuItemHeight = parseInt(value);
                     break;
+                case 'dynamic':
+                    let castValue = parseInt(value);
+                    this.settings.menuDynamic = castValue < 0 ? 0 : castValue > 100 ? 100 : castValue;
+                    break;
             }
         });
         if(select.options.length) {
@@ -111,6 +116,14 @@ class ezmodusSelectPicker {
         }
         this.render();
     };
+
+    handleAriaAttributes(source, target) {
+        Object.entries(source.attributes).forEach(([index, node]) => {
+            if(node.nodeName == 'role' || node.nodeName.indexOf('aria-') !== -1) {
+                target.setAttribute(node.nodeName, node.value);
+            }
+        });
+    }
 
     /**
      * Actual event for selecting item
@@ -228,12 +241,15 @@ class ezmodusSelectPicker {
 
     /*
     Create menu item with structure
-    li > a > span (text) + i (checkmark)
+    li > div > a > i (checkmark) + span (text)
+       > div (subtext if set)
     */
     createMenuItem(picker, index, item) {
         let li = document.createElement('li');
         li.tabIndex = 0;
         li.dataset.pos = index;
+
+        this.handleAriaAttributes(item, li);
 
         if(item.selected) {
             li.classList.add('selected');
@@ -281,64 +297,127 @@ class ezmodusSelectPicker {
     };
 
     /**
-     * Search from text and hide necessary objects
+     * Search from text and hide necessary objects.
+     * This has advanced search with RegEx to able
+     * to exclude (not) or include (or)
      */
     addHandlerSearch(picker, menu, event) {
-        let lookfor = '';
-        if(this.value) {
-            lookfor = this.value.toLowerCase();
+        const regex = new RegExp(/.+?(?=\s[+|-])|.+/gm);
+        let params = [...this.value.matchAll(regex)];
+        let cleaned_params = [];
+        let exclusion = [];
+        let inclusion = [];
+        // Go through params, trim them and separate them based on
+        // exclusion or inclusion
+        for(let i = 0; i < params.length; i++) {
+            let string = params[i][0].trim().toLowerCase();
+            cleaned_params.push(string);
+            if(string.startsWith('-')) {
+                exclusion.push(string.substr(1));
+                continue;
+            }
+            if(string.startsWith('+')) {
+                inclusion.push(string.substr(1));
+                continue;
+            }
+            // otherwise it is a search term itself
+            // and can be added into inclusion
+            inclusion.push(string);
         }
+        // update the search string for information
+        picker.searchString = cleaned_params.join(' ');
+
+        // go through picker.texts (because values are the same height)
+        // and checks based on settings.searchFrom and parsed search
         let indexes = [];
-        // Depending on data "search from" value look from texts, values or both
-        // loop picker items to find out which position it holds
-        if(picker.settings.searchFrom == 'both') {
-            picker.values.forEach(function(text, position) {
-                if(text.indexOf(lookfor) !== -1) {
-                    indexes.push(position);
+        let searchloc = picker.settings.searchFrom;
+        picker.texts.forEach(function(opttext, position) {
+            let optvalue = picker.values[position];
+            let is_included, is_exluded = false;
+            // go through exlusion first, because it is stronger
+            exclusion.forEach((val) => {
+                // option value or text
+                if(searchloc == 'both') {
+                    if(optvalue.indexOf(val) !== -1) {
+                        is_exluded = true;
+                        return;
+                    }
+                    if(opttext.indexOf(val) !== -1) {
+                        is_exluded = true;
+                        return;
+                    }
+                }
+                // option value only
+                if(searchloc == 'values') {
+                    if(optvalue.indexOf(val) !== -1) {
+                        is_exluded = true;
+                        return;
+                    }
+                }
+                // option text (default)
+                if(opttext.indexOf(val) !== -1) {
+                    is_exluded = true;
+                    return;
                 }
             });
-            picker.texts.forEach(function(text, position) {
-                if(text.indexOf(lookfor) !== -1 && !indexes.includes(position)) {
-                    indexes.push(position);
-                }
-            });
-        }
-        else if(picker.settings.searchFrom == 'values') {
-            picker.values.forEach(function(text, position) {
-                if(text.indexOf(lookfor) !== -1) {
-                    indexes.push(position);
-                }
-            });
-        }
-        // default only in texts
-        else {
-            picker.texts.forEach(function(text, position) {
-                if(text.indexOf(lookfor) !== -1) {
-                    indexes.push(position);
-                }
-            });
-        }
-        // now hide the elements which are not in index list
+            if(!is_exluded) {
+                inclusion.forEach((val) => {
+                    // option value or text
+                    if(searchloc == 'both') {
+                        if(optvalue.indexOf(val) !== -1) {
+                            is_included = true;
+                            return;
+                        }
+                        if(opttext.indexOf(val) !== -1) {
+                            is_included = true;
+                            return;
+                        }
+                    }
+                    // option value only
+                    if(searchloc == 'values') {
+                        if(optvalue.indexOf(val) !== -1) {
+                            is_included = true;
+                            return;
+                        }
+                    }
+                    // option text (default)
+                    if(opttext.indexOf(val) !== -1) {
+                        is_included = true;
+                        return;
+                    }
+                });
+            }
+            if(is_included) {
+                indexes.push(position);
+            }
+        });
+        // Update menu list items based on search
+        // hide those which are not in index list
         menu.querySelectorAll('li').forEach(function(obj) {
-            if(!indexes.includes(parseInt(obj.dataset.pos))) {
-                obj.style.display = 'none';
-            }
-            else {
+            // if nothing to look then make sure all is reseted
+            if(!cleaned_params.length) {
                 obj.style.display = 'list-item';
+                return;
             }
+            if(indexes.includes(parseInt(obj.dataset.pos))) {
+                obj.style.display = 'list-item';
+                return;
+            }
+            obj.style.display = 'none';
         });
         // results text
         let noresults = menu.querySelector('div.no-results');
         if(indexes.length) {
             noresults.innerHTML = '';
+            noresults.innerText = '';
             noresults.style.display = 'none';
         }
         else {
-            let msg = picker.settings.searchNoResultsText.replace('{0}', lookfor);
+            let msg = picker.settings.searchNoResultsText.replace('{0}', picker.searchString);
             noresults.innerHTML = msg;
+            noresults.innerText = msg;
             noresults.style.display = 'block';
         }
-        picker.searchString = lookfor;
     }
     createMenu() {
         let picker = this;
@@ -410,13 +489,68 @@ class ezmodusSelectPicker {
     }
 
     /**
-     * Calculate height for list items based on select size attribute
+     * This is just a helper function to return list item's
+     * width when studying paddings and margins for element itself and
+     * checkmark
+     */
+    calculateMenuItemStructureWidth() {
+        let picker = this;
+        let width = 0;
+        // get elements
+        let li = picker.menu.querySelector('li');
+        let link = li.querySelector('a');
+        let icon = li.querySelector('i');
+
+        let styles = ['padding-left', 'padding-right', 'margin-left', 'margin-right'];
+        styles.forEach(function(value) {
+            width += parseInt(
+                window.getComputedStyle(li, null).getPropertyValue(value)
+            );
+            width += parseInt(
+                window.getComputedStyle(link, null).getPropertyValue(value)
+            );
+            width += parseInt(
+                window.getComputedStyle(icon, null).getPropertyValue(value)
+            );
+        });
+        width += parseInt(
+            window.getComputedStyle(icon, null).getPropertyValue('width')
+        );
+        return width;
+    }
+
+    /**
+     * Calculates real context of the element without inserting it
+     * by using canvas and computed font size and font family.
+     *
+     * This way text is seen as single line and
+     * styling and text wrap has no effect.
+     * @param {DOMElement} element
+     * @returns {int}
+     */
+    calculateContextWidth(element) {
+        let fsize = window.getComputedStyle(element, null).getPropertyValue('font-size');
+        let family = window.getComputedStyle(element, null).getPropertyValue('font-family');
+        // create canvas
+        let canvas = document.createElement('canvas');
+        let context = canvas.getContext('2d');
+        context.font = `${fsize} ${family}`;
+        let measure = context.measureText(element.textContent);
+        return measure.width;
+    };
+
+    /**
+     * Calculate dimensions for list items.
+     * If size is given then calculate height based on size.
+     *
+     * If dynamic is given then calculate menu width
      * and if menu item height is given then use it to tweak
      * @param {*} dropdown
      */
-    calculateMenuHeight(dropdown) {
+    calculateMenuDimensions(dropdown) {
+        let picker = this;
         // calculate height for list items
-        if(this.settings.size) {
+        if(picker.settings.size) {
             let el = null;
             if(el = dropdown.querySelector('li')) {
                 let elHeight = this.settings.menuItemHeight ?? 31;
@@ -432,6 +566,31 @@ class ezmodusSelectPicker {
             let menu = dropdown.querySelector('.ezmodus-menu ul');
             menu.style.maxHeight = this.settings.menuHeight + 2 + 'px';
         }
+        // calculate dynamic width
+        if(picker.settings.menuDynamic) {
+            // calculate first extra margins, paddings and rest of the content
+            let extraWidth = picker.calculateMenuItemStructureWidth();
+            let longestWidth = 0;
+            picker.menu.querySelectorAll('li').forEach(function(li) {
+                let text = li.querySelector('.text');
+                let width = picker.calculateContextWidth(text);
+                // handle possible subtext
+                let subtext = li.querySelector('.subtext');
+                if(subtext) {
+                    let subwidth = picker.calculateContextWidth(subtext);
+                    if(width < subwidth) {
+                        width = subwidth;
+                    }
+                }
+                // update the longest width from longest item
+                if(longestWidth < width) {
+                    longestWidth = width;
+                }
+            });
+            let percent = picker.settings.menuDynamic / 100;
+            let newWidth = (longestWidth + extraWidth) * percent;
+            picker.menu.style.minWidth = newWidth + 'px';
+        }
     };
 
     render() {
@@ -441,11 +600,16 @@ class ezmodusSelectPicker {
         // Set dropdown before select and then add select into it
         this.select.parentNode.insertBefore(dropdown, this.select);
         dropdown.appendChild(this.select);
-        this.button = this.createDropdownButton(dropdown, this.select);
+
+        // Create dropdown button
+        let button = this.createDropdownButton(dropdown, this.select);
+        this.handleAriaAttributes(this.select, button);
+        this.button = button;
+
         dropdown.appendChild(this.button);
         dropdown.appendChild(this.createMenu());
         this.changeDropdownButton();
-        this.calculateMenuHeight(dropdown);
+        this.calculateMenuDimensions(dropdown);
         dropdown.addEventListener('focusout', function(e) {
             if(!e.currentTarget.contains(e.relatedTarget)) {
                 dropdown.classList.remove('open-menu');

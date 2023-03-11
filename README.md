@@ -18,6 +18,10 @@ It works pretty much the same as bootstrap-select, but this also adds few extra 
 
 ## Release notes
 
+- [1.0.3, March 11, 2023](/docs/release-notes.md#1.0.3)
+
+    ARIA-support, dynamic width and improved search
+
 - [1.0.2, March 5, 2023](/docs/release-notes.md#1.0.2)
 
     Distribution files were development format, updated to production and minified.
@@ -144,7 +148,7 @@ Add these attributes with prefix `data-`.
 | Attribute             | Default                   | Description
 |-----------------------|---------------------------|-----------------
 | tick                  | true                      | Shows tick on dropdown.
-| search                | false                     | If 'true' then show search input for list items.
+| search                | false                     | If 'true' then show search input for list items. [Click here to see how search works](search.md)
 | search-from           | null                      | Search from texts, if "values" then search looks values of "option value", if "both" then look for values or texts.
 | search-placeholder    | Filter...                 | Placeholder text for search input.
 | search-no-results     | No results matched "{0}"  | When with given string search does not find anything, this is the message to show, {0} is magic and will be replaced with given input.
@@ -154,6 +158,7 @@ Add these attributes with prefix `data-`.
 | clear-show            | false                     | Only for multiple, but if 'true' then show button before the list to clear/reset existing selections
 | clear-text            | clear selection           | Default text for the clear selection button
 | menu-item-height      | null                      | This is only for special cases where parent node is `display:none`. Picker normally uses offsetHeight to determine the height of the menu item. When select is already hidden, it cannot see the value correctly. If this is the case the default height is 31, but if you do custom styling then this is the way to correct it further.
+| dynamic               | null                      | Integer as percent, eg "80", between 0-100. Finds out the longest list item's text content and calculates width and sets new `min-width` to be 80 percent of that. This is useful to show more beautiful look when options themselves are short, but they have long `data-desc` value.
 
 **SELECT'S OPTION ATTRIBUTE**
 
@@ -169,5 +174,5 @@ Super simple setup
 
 - Git clone the project
 - Run `npm install`
-- Run `npm build|watch|production`
+- Run `npm run build|watch|production`
 - View Demo under `demo/index.html`

@@ -1,12 +1,34 @@
 # Release notes
 
-## 1.0.2
+## 1.0.3, March 11, 2023
 
- -  **Distribution files**
+- **ARIA-support**
+
+    ARIA-attributes (`aria-*`) and roles (`role`) are passed as is. `<select>` attributes are moved to dropdown button and `<option>`' attributes are moved to list items.
+
+    ARIA understands HTML elements automatically, so these may not be needed, but support for this doesn't hurt.
+
+- **Dynamic width**
+
+    Sometimes select options can be short, example "Yes" and "No", but they may have `data-desc` with long text or vice versa. This may look stupid if everything is wrapped in very narrow menu.
+
+    Set into select `data-dynamic="80"` to go through all elements context width and sets new min-width 80% of the longest element. Value of 100 should give list items to be "one liners".
+
+- **Improved search**
+
+
+
+    Search was based on simple `indexOf('your string')`. Search string had to match fully to get listed. New search is improved.
+
+    [Click here to see how search works](search.md)
+
+## 1.0.2, March 5, 2023
+
+- **Distribution files**
 
     Distribution files were development format, updated to production and minified.
 
-## 1.0.1
+## 1.0.1, March 5, 2023
 
 - **Fixed dropdown focusout**
 
