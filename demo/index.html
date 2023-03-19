@@ -48,7 +48,7 @@
 
         <div class="testbox">
             <label>Single select (with size 6)</label>
-            <select class="ezmodus-select-picker copy-test-class" size="6">
+            <select class="ezmodus-select-picker copy-test-class" data-size="6">
                 <option value="Alfa Romeo">Alfa Romeo</option>
                 <option value="Aston Martin">Aston Martin</option>
                 <option value="Audi">Audi</option>
@@ -94,14 +94,10 @@
                 <option value="2" data-desc="Sometimes even this means Yes">No</option>
             </select>
         </div>
-        <div class="testbox">Yes</div>
-        <div class="testbox">This could be very long text to describe the very short text</div>
-        <div class="testbox">No</div>
-        <div class="testbox">Sometimes even this means Yes</div>
 
         <div class="testbox">
             <label>Multiple with size change 8</label>
-            <select class="ezmodus-select-picker" size="8" multiple>
+            <select class="ezmodus-select-picker" data-size="8" multiple>
                 <option value="Alfa Romeo">Alfa Romeo</option>
                 <option value="Aston Martin">Aston Martin</option>
                 <option value="Audi">Audi</option>
@@ -132,7 +128,7 @@
 
         <div class="testbox">
             <label>Multiple with size 8<br>disabled and class passing</label>
-            <select class="ezmodus-select-picker test-class another-class" size="8" multiple>
+            <select class="ezmodus-select-picker test-class another-class" data-size="8" multiple>
                 <option value="Alfa Romeo" class="option-class" selected>
                     Alfa Romeo (with passed class)
                 </option>
@@ -165,7 +161,7 @@
 
         <div class="testbox">
             <label>Multiple with size change 6 (live search)</label>
-            <select class="ezmodus-select-picker" size="6" data-search="true" multiple>
+            <select class="ezmodus-select-picker" data-size="6" data-search-focus="true" data-search="true" multiple>
                 <option value="Alfa Romeo">Alfa Romeo</option>
                 <option value="Aston Martin">Aston Martin</option>
                 <option value="Audi">Audi</option>
@@ -197,9 +193,10 @@
         <div class="testbox">
             <label>Multiple with size 8<br>(max 5) (full implementation)</label>
             <select class="ezmodus-select-picker"
-                size="8"
                 title="Choose car brands"
+                data-size="8"
                 data-search="true"
+                data-search-focus="true"
                 data-search-from="both"
                 data-search-placeholder="Find..."
                 data-search-no-results="No results with string '{0}'"
@@ -245,8 +242,9 @@
             <button type="button" class="show-button" data-target="hidden-element">Show select</button>
             <div id="hidden-element" class="testbox hide">
                 <label>Multiple with size</label>
-                <select class="ezmodus-select-picker" size="4"
+                <select class="ezmodus-select-picker"
                     title="Choose car brands"
+                    data-size="4"
                     data-search="true"
                     data-clear-show="true"
                     data-clear-button="Tyhjennä"

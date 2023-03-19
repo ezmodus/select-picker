@@ -49,6 +49,7 @@ class ezmodusSelectPicker {
         /**
          * Example settings from data attributes
             data-tick="false"
+            data-size="8"
             data-search="true"
             data-search-from="both"
             data-search-placeholder="Find..."
@@ -62,11 +63,17 @@ class ezmodusSelectPicker {
          */
         Object.entries(select.dataset).forEach(([data, value]) => {
             switch(data) {
+                case 'size':
+                    this.settings.size = parseInt(value);
+                    break;
                 case 'tick':
                     this.settings.dropdownTick = (value.toLowerCase() === 'false') ? false : true;
                 break;
                 case 'search':
                         this.settings.searchShow = (value.toLowerCase() === 'true') ? true : false;
+                    break;
+                    case 'searchFocus':
+                        this.settings.searchFocus = (value.toLowerCase() === 'true') ? true : false;
                     break;
                 case 'searchPlaceholder':
                         this.settings.searchInputPlaceHolder = value;
@@ -196,6 +203,15 @@ class ezmodusSelectPicker {
         button.classList.add('ezmodus-dropdown');
         button.addEventListener('click', function() {
             dropdown.classList.toggle('open-menu');
+            // if open, search and focus is true then focus on search
+            if(dropdown.classList.contains('open-menu') && picker.settings.searchShow && picker.settings.searchFocus) {
+                let search = dropdown.querySelector('input[type="search"]');
+                // it takes microseconds to get menu element visible
+                // therefore this is a trick to delay focus a little
+                setTimeout(() => {
+                    search.focus();
+                }, 100);
+            }
         });
         select.classList.forEach(function(klass) {
             if(klass !== 'ezmodus-select-picker') {

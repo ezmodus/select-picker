@@ -1,5 +1,15 @@
 # Release notes
 
+## 1.0.4, March 19, 2023
+
+- **DATA-SIZE**
+
+    This is an alternative way to setup size of the menu for select picker. It is more preferable way to setup. Because when using `<select size="4" />` browser will first render select as normally. This means select will be increased in height. When using `data-size` and keeping normal size undefined the select itself is like normal input size. Otherwise you may see small blink of bigger size elements while loading the page until the ezmodus select picker transforms the select element.
+
+- **Auto focus on search**
+
+    Set `data-search-focus="true"` and while opening the menu with search then automatically sets focus on search input.
+
 ## 1.0.3, March 11, 2023
 
 - **ARIA-support**
@@ -15,8 +25,6 @@
     Set into select `data-dynamic="80"` to go through all elements context width and sets new min-width 80% of the longest element. Value of 100 should give list items to be "one liners".
 
 - **Improved search**
-
-
 
     Search was based on simple `indexOf('your string')`. Search string had to match fully to get listed. New search is improved.
 
