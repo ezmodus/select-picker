@@ -18,6 +18,10 @@ It works pretty much the same as bootstrap-select, but this also adds few extra 
 
 ## Release notes
 
+- [1.0.5, March 19, 2023](/docs/release-notes.md#1.0.5)
+
+    `data-search-focus-mobile` desktop and touch device difference, new defaults
+
 - [1.0.4, March 19, 2023](/docs/release-notes.md#1.0.4)
 
     `data-size` attribute and auto focus on search
@@ -142,7 +146,7 @@ These can be modified a lot to give more richer tools to use.
 
 | Attribute             | Default   | Description
 |-----------------------|---------------------------|-----------------
-| size                  | null / 10 | How many items are shown when dropdown opens. Single selection all (null), for multiple defaults to 10. If select has more items than defined size then show scrollbar. This can also set with data-attribute.
+| size                  | 1 / 10    | How many items are shown when dropdown opens. Single selection all (null), for multiple defaults to 10. If select has more items than defined size then show scrollbar. This can also set with data-attribute.
 | title                 | Select    | Text, what to show on when no selection on dropdown
 | multiple              |           | Activates multiple selection support
 
@@ -155,7 +159,8 @@ Add these attributes with prefix `data-`.
 | size                  | null                      | This is another way to setup how many items are shown when menu opens. This is is preferable way to setup without worrying browser to default render select with size and then hides it. On page load selects' with size may look bigger before transforming them to select picker.
 | tick                  | true                      | Shows tick on dropdown.
 | search                | false                     | If 'true' then show search input for list items. [Click here to see how search works](search.md)
-| search-focus          | false                     | If true when opening the menu sets focus on search input.
+| search-focus          | true                     | If set, then automatically focus on search on desktop.
+| search-focus-mobile   | false                    | If set, then automatically focus on search on touch devices.
 | search-from           | null                      | Search from texts, if "values" then search looks values of "option value", if "both" then look for values or texts.
 | search-placeholder    | Filter...                 | Placeholder text for search input.
 | search-no-results     | No results matched "{0}"  | When with given string search does not find anything, this is the message to show, {0} is magic and will be replaced with given input.

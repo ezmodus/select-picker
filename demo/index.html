@@ -160,8 +160,16 @@
         </div>
 
         <div class="testbox">
-            <label>Multiple with size change 6 (live search)</label>
-            <select class="ezmodus-select-picker" data-size="6" data-search-focus="true" data-search="true" multiple>
+            <label>
+                Multiple with size change 6 (live search)<br>
+                Focus on mobile, but not on desktop
+            </label>
+            <select class="ezmodus-select-picker"
+                data-size="6"
+                data-search-focus="false"
+                data-search-focus-mobile="true"
+                data-search="true" multiple
+            >
                 <option value="Alfa Romeo">Alfa Romeo</option>
                 <option value="Aston Martin">Aston Martin</option>
                 <option value="Audi">Audi</option>
@@ -196,7 +204,6 @@
                 title="Choose car brands"
                 data-size="8"
                 data-search="true"
-                data-search-focus="true"
                 data-search-from="both"
                 data-search-placeholder="Find..."
                 data-search-no-results="No results with string '{0}'"

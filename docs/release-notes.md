@@ -1,5 +1,14 @@
 # Release notes
 
+## 1.0.5, March 23, 2023
+
+- **Bug fix**: After using search and leaving input empty, `no results` were showing, now hidden.
+
+- **Auto focus**
+
+    Changed default behaviour and search input focus is now default `true` when using "desktop" devices.
+    Added `data-search-focus-mobile` (defaults: `false`). This is separate focus on touch based devices. If set true then keyboard is shown if opening menu has search.
+
 ## 1.0.4, March 19, 2023
 
 - **DATA-SIZE**

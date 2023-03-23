@@ -14,8 +14,9 @@ class ezmodusSelectPicker {
     menu = null; // div menu (ezmodus-menu)
     // settings
     settings = {
+        isMobile: 'ontouchstart' in window,
         multiple: false,
-        size: null,
+        size: 1,
         title: 'Select',
         dropdownTick: true,
         selectedMax: null,
@@ -24,6 +25,8 @@ class ezmodusSelectPicker {
         menuItemHeight: null,
         menuDynamic: null,
         searchShow: false,
+        searchFocus: true,
+        searchFocusMobile: false,
         searchInputPlaceHolder: 'Filter...',
         searchFrom: null,
         searchNoResultsText: 'No results matched "{0}"',
@@ -51,6 +54,8 @@ class ezmodusSelectPicker {
             data-tick="false"
             data-size="8"
             data-search="true"
+            data-search-focus="false"
+            data-search-focus-mobile="true"
             data-search-from="both"
             data-search-placeholder="Find..."
             data-search-no-results="No results for {0}"
@@ -72,8 +77,11 @@ class ezmodusSelectPicker {
                 case 'search':
                         this.settings.searchShow = (value.toLowerCase() === 'true') ? true : false;
                     break;
-                    case 'searchFocus':
+                case 'searchFocus':
                         this.settings.searchFocus = (value.toLowerCase() === 'true') ? true : false;
+                    break;
+                case 'searchFocusMobile':
+                        this.settings.searchFocusMobile = (value.toLowerCase() === 'true') ? true : false;
                     break;
                 case 'searchPlaceholder':
                         this.settings.searchInputPlaceHolder = value;
@@ -203,14 +211,27 @@ class ezmodusSelectPicker {
         button.classList.add('ezmodus-dropdown');
         button.addEventListener('click', function() {
             dropdown.classList.toggle('open-menu');
-            // if open, search and focus is true then focus on search
-            if(dropdown.classList.contains('open-menu') && picker.settings.searchShow && picker.settings.searchFocus) {
+            let autofocus = false;
+            // check are we on touch based devices
+            if(picker.settings.isMobile) {
+                if(picker.settings.searchShow && picker.settings.searchFocusMobile) {
+                    autofocus = true;
+                }
+            }
+            // otherwise "desktop"
+            else {
+                if(picker.settings.searchShow && picker.settings.searchFocus) {
+                    autofocus = true;
+                }
+            }
+            // if open, search and focus is set, then focus on search
+            if(dropdown.classList.contains('open-menu') && autofocus) {
                 let search = dropdown.querySelector('input[type="search"]');
                 // it takes microseconds to get menu element visible
                 // therefore this is a trick to delay focus a little
                 setTimeout(() => {
                     search.focus();
-                }, 100);
+                }, 75);
             }
         });
         select.classList.forEach(function(klass) {
@@ -423,7 +444,7 @@ class ezmodusSelectPicker {
         });
         // results text
         let noresults = menu.querySelector('div.no-results');
-        if(indexes.length) {
+        if(indexes.length || picker.searchString == '') {
             noresults.innerHTML = '';
             noresults.innerText = '';
             noresults.style.display = 'none';
