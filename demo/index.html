@@ -14,6 +14,18 @@
 
     <div class="testarea">
         <div class="testbox">
+            <label>Disabled</label>
+            <select class="ezmodus-select-picker" role="button" aria-hidden="false" disabled="disabled">
+                <option value="Alfa Romeo" role="option" aria-hidden="false" aria-label="Alfa Romeo">
+                    Alfa Romeo
+                </option>
+                <option value="Aston Martin">Aston Martin</option>
+                <option value="Audi">Audi</option>
+                <option value="Bentley">Bentley</option>
+            </select>
+
+            <br />
+
             <label>Single select (just a class)</label>
             <select class="ezmodus-select-picker" role="button" aria-hidden="false">
                 <option value="Alfa Romeo" role="option" aria-hidden="false" aria-label="Alfa Romeo">
@@ -44,9 +56,9 @@
                 <option value="Subaru">Subaru</option>
                 <option value="Suzuki">Suzuki</option>
             </select>
-        </div>
 
-        <div class="testbox">
+            <br />
+
             <label>Single select (with size 6)</label>
             <select class="ezmodus-select-picker copy-test-class" data-size="6">
                 <option value="Alfa Romeo">Alfa Romeo</option>
@@ -87,11 +99,40 @@
             </select>
             <br />
             <label>Same + data-dynamic</label>
-            <select class="ezmodus-select-picker" data-dynamic="-100">
+            <select class="ezmodus-select-picker" data-dynamic="100">
                 <option value="1" data-desc="This could be very long text to describe the very short text">
                     Yes
                 </option>
                 <option value="2" data-desc="Sometimes even this means Yes">No</option>
+            </select>
+
+            <br />
+            <label>Same + data-dynamic (no desc)</label>
+            <select class="ezmodus-select-picker" data-dynamic="100">
+                <option value="1">
+                    This could be very long text to describe the very short text
+                </option>
+                <option value="2">
+                    This is little bit shorter than the first
+                </option>
+                <option value="3">
+                    Short stuff
+                </option>
+            </select>
+        </div>
+
+        <div class="testbox">
+            <label>Select + html content</label>
+            <select class="ezmodus-select-picker" data-size="8" data-search="true">
+                <option value="1">
+                    <strong>Alfa</strong> Romeo
+                </option>
+                <option value="2">
+                    <span style="color: red;">Aston</span> <span class="color:lightblue;">Martin</span>
+                </option>
+                <option value="3">Audi</option>
+                <option value="4">Bentley</option>
+                <option value="5">BMW</option>
             </select>
         </div>
 

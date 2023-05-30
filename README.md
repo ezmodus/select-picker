@@ -18,6 +18,10 @@ It works pretty much the same as bootstrap-select, but this also adds few extra 
 
 ## Release notes
 
+- [1.0.6, May 31, 2023](/docs/release-notes.md#1.0.6)
+
+    disabled support and fixes data-dynamic to calculate element size better
+
 - [1.0.5, March 19, 2023](/docs/release-notes.md#1.0.5)
 
     `data-search-focus-mobile` desktop and touch device difference, new defaults

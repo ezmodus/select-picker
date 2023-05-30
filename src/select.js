@@ -46,6 +46,7 @@ class ezmodusSelectPicker {
         this.select = select;
         this.settings.multiple = select.multiple;
         this.settings.size = (select.size || undefined) ?? ((parseInt(this.settings.size)) ? 10 : null);
+        this.settings.disabled = (select.disabled || undefined) ? true : false;
         if(select.title) {
             this.settings.title = select.title;
         }
@@ -210,7 +211,9 @@ class ezmodusSelectPicker {
         button.type = 'button';
         button.classList.add('ezmodus-dropdown');
         button.addEventListener('click', function() {
-            dropdown.classList.toggle('open-menu');
+            if(!button.classList.contains('disabled')) {
+                dropdown.classList.toggle('open-menu');
+            }
             let autofocus = false;
             // check are we on touch based devices
             if(picker.settings.isMobile) {
@@ -534,12 +537,20 @@ class ezmodusSelectPicker {
         let picker = this;
         let width = 0;
         // get elements
+        let ul = picker.menu.querySelector('ul');
         let li = picker.menu.querySelector('li');
         let link = li.querySelector('a');
         let icon = li.querySelector('i');
 
-        let styles = ['padding-left', 'padding-right', 'margin-left', 'margin-right'];
+        let styles = [
+            'padding-left', 'padding-right',
+            'margin-left', 'margin-right',
+            'border-left-width', 'border-right-width'
+        ];
         styles.forEach(function(value) {
+            width += parseInt(
+                window.getComputedStyle(ul, null).getPropertyValue(value)
+            );
             width += parseInt(
                 window.getComputedStyle(li, null).getPropertyValue(value)
             );
@@ -609,6 +620,11 @@ class ezmodusSelectPicker {
             let extraWidth = picker.calculateMenuItemStructureWidth();
             let longestWidth = 0;
             picker.menu.querySelectorAll('li').forEach(function(li) {
+                // check which element is the the widthest
+                if(longestWidth < li.scrollWidth) {
+                    longestWidth = li.scrollWidth;
+                }
+                // also check text fonts because they may wary
                 let text = li.querySelector('.text');
                 let width = picker.calculateContextWidth(text);
                 // handle possible subtext
@@ -640,6 +656,9 @@ class ezmodusSelectPicker {
 
         // Create dropdown button
         let button = this.createDropdownButton(dropdown, this.select);
+        if(this.settings.disabled) {
+            button.classList.add('disabled');
+        }
         this.handleAriaAttributes(this.select, button);
         this.button = button;
 

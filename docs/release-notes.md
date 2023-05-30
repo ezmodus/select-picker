@@ -1,5 +1,10 @@
 # Release notes
 
+## 1.0.6, May 31, 2023
+
+- If `select` has `disabled` attribute now also the button is disabled (menu does not open)
+- `data-dynamic` calculating element width did not properly handled width so calculation corrected.
+
 ## 1.0.5, March 23, 2023
 
 - **Bug fix**: After using search and leaving input empty, `no results` were showing, now hidden.

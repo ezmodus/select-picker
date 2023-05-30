@@ -26,6 +26,9 @@
         padding: $ezmodus-dropdown-padding;
         justify-content: space-between;
         cursor: pointer;
+        &.disabled {
+            cursor: default;
+        }
         .text {
             padding: $ezmodus-dropdown-text-padding;
             color: $ezmodus-dropdown-color;
