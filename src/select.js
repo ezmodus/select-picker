@@ -105,7 +105,7 @@ class ezmodusSelectPicker {
                     this.settings.selectedText = value;
                     break;
                 case 'selectedMax':
-                    this.selectedMax = parseInt(value);
+                    this.settings.selectedMax = parseInt(value);
                     break;
                 case 'clearShow':
                     this.settings.clearButtonShow = (value === 'true') ? true : false;

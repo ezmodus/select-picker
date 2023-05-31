@@ -1,9 +1,30 @@
 # Release notes
 
+## 1.0.7, May 31, 2023
+
+- **Added sass variables and defaults for disabled select**
+
+    Change text color `$ezmodus-dropdown-disabled-color`.
+    
+    Change button background color `$ezmodus-dropdown-disabled-background-color`.
+    
+    Change mouse cursor on hover `$ezmodus-dropdown-disabled-cursor`.
+    
+    Change tick color `$ezmodus-dropdown-disabled-tick-color`.
+
+- **DATA-SELECTED-MAX**
+
+    Fixed error to pickup the max count and limit selection.
+
 ## 1.0.6, May 31, 2023
 
-- If `select` has `disabled` attribute now also the button is disabled (menu does not open)
-- `data-dynamic` calculating element width did not properly handled width so calculation corrected.
+- **DISABLED-support**
+
+    If `select` has `disabled` attribute now also the button is disabled (menu does not open)
+
+- **DATA-DYNAMIC**
+
+    Fix how calculating width is done `data-dynamic`.
 
 ## 1.0.5, March 23, 2023
 

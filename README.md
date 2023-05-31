@@ -20,7 +20,7 @@ It works pretty much the same as bootstrap-select, but this also adds few extra 
 
 - [1.0.6, May 31, 2023](/docs/release-notes.md#1.0.6)
 
-    disabled support and fixes data-dynamic to calculate element size better
+    disabled support, fix selected max and fixes data-dynamic to calculate element size better
 
 - [1.0.5, March 19, 2023](/docs/release-notes.md#1.0.5)
 
@@ -118,7 +118,7 @@ otherwise the attribute does not exist.
 These helps developer even further to manipulate dropdown and items.
 -->
 <select class="ezmodus-select-picker another-class"
-    size="6"
+    data-size="6"
     title="Choose your role"
     data-tick="false"
     data-search="true"
@@ -150,7 +150,7 @@ These can be modified a lot to give more richer tools to use.
 
 | Attribute             | Default   | Description
 |-----------------------|---------------------------|-----------------
-| size                  | 1 / 10    | How many items are shown when dropdown opens. Single selection all (null), for multiple defaults to 10. If select has more items than defined size then show scrollbar. This can also set with data-attribute.
+| size                  | 1         | How many items are shown when dropdown opens. If select has more items than defined size then show scrollbar. This can also set with data-attribute.
 | title                 | Select    | Text, what to show on when no selection on dropdown
 | multiple              |           | Activates multiple selection support
 

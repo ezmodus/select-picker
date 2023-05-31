@@ -6,20 +6,38 @@
     @return $string;
 }
 
+/* Helper function to get SVG with given color
+ * Color must be given in HEX including hyphens
+ */
+@function tick($color) {
+  @return 'data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><path d="M201.4 406.6c12.5 12.5 32.8 12.5 45.3 0l192-192c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L224 338.7 54.6 169.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3l192 192z" fill="#{str-replace($color, "#", "%23")}"/></svg>';
+}
+
+/* Helper function to get SVG with given color
+ * Color must be given in HEX including hyphens
+ */
+ @function checkmark($color) {
+  @return 'data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path d="M470.6 105.4c12.5 12.5 12.5 32.8 0 45.3l-256 256c-12.5 12.5-32.8 12.5-45.3 0l-128-128c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0L192 338.7 425.4 105.4c12.5-12.5 32.8-12.5 45.3 0z" fill="#{str-replace($color, "#", "%23")}"/></svg>';
+}
+
 
 /* DROPDOWN BUTTON
 *****************************/
 
-$ezmodus-dropdown-border:           1px solid #ced4da !default;
-$ezmodus-dropdown-border-radius:    3px !default;
-$ezmodus-dropdown-background-color: #ffffff !default;
-$ezmodus-dropdown-color:            #000000 !default;
-$ezmodus-dropdown-width:            auto !default;
-$ezmodus-dropdown-padding:          0 6px 1px 0 !default;
-$ezmodus-dropdown-text-padding:     .375rem 1.75rem .375rem .75rem !default;
-$ezmodus-dropdown-tick-width:       1rem !default;
-$ezmodus-dropdown-tick-height:      1rem !default;
-$ezmodus-dropdown-tick-color:       '#6c6c6c' !default;
+$ezmodus-dropdown-border:                     1px solid #ced4da !default;
+$ezmodus-dropdown-border-radius:              3px !default;
+$ezmodus-dropdown-background-color:           #ffffff !default;
+$ezmodus-dropdown-color:                      #000000 !default;
+$ezmodus-dropdown-width:                      auto !default;
+$ezmodus-dropdown-padding:                    0 6px 1px 0 !default;
+$ezmodus-dropdown-text-padding:               .375rem 1.75rem .375rem .75rem !default;
+$ezmodus-dropdown-tick-width:                 1rem !default;
+$ezmodus-dropdown-tick-height:                1rem !default;
+$ezmodus-dropdown-tick-color:                 '#6c6c6c' !default;
+$ezmodus-dropdown-disabled-color:             #666666 !default;
+$ezmodus-dropdown-disabled-background-color:  #f2f2f2 !default;
+$ezmodus-dropdown-disabled-cursor:            default !default;
+$ezmodus-dropdown-disabled-tick-color:        '#c4c4c4' !default;
 
 
 /* DROPDOWN MENU
@@ -47,7 +65,7 @@ $ezmodus-search-input-border-radius:    3px !default;
 
 $ezmodus-clear-padding:                 6px 12px 3px 12px !default;
 $ezmodus-clear-button-text-padding:     .375rem 1.75rem .375rem .75rem !default;
-$ezmodus-clear-button-color:            #6c6c6c !default;
+$ezmodus-clear-button-color:            #2b2b2b !default;
 $ezmodus-clear-button-background-color: #efefef !default;
 $ezmodus-clear-button-width:            100% !default;
 $ezmodus-clear-button-height:           32px !default;
