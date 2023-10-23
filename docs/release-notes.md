@@ -1,5 +1,9 @@
 # Release notes
 
+## 1.0.9, October 23, 2023
+
+- Assets rebuilt
+
 ## 1.0.8, October 23, 2023
 
 - **Bug fix**: Dynamic width calculation did not handle the span element's styles.

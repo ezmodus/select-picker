@@ -18,6 +18,10 @@ It works pretty much the same as bootstrap-select, but this also adds few extra 
 
 ## Release notes
 
+- [1.0.9, October 23, 2023](/docs/release-notes.md#1.0.9)
+
+    Forgot to rebuild assets
+
 - [1.0.8, October 23, 2023](/docs/release-notes.md#1.0.8)
 
     Change event trigger, search now includes `data-desc` and fix for dynamic width calculation
