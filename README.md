@@ -18,11 +18,19 @@ It works pretty much the same as bootstrap-select, but this also adds few extra 
 
 ## Release notes
 
+- [1.0.8, October 23, 2023](/docs/release-notes.md#1.0.8)
+
+    Change event trigger, search now includes `data-desc` and fix for dynamic width calculation
+
+- [1.0.7, May 31, 2023](/docs/release-notes.md#1.0.7)
+
+    SASS coloring variables and defaults
+
 - [1.0.6, May 31, 2023](/docs/release-notes.md#1.0.6)
 
     disabled support, fix selected max and fixes data-dynamic to calculate element size better
 
-- [1.0.5, March 19, 2023](/docs/release-notes.md#1.0.5)
+- [1.0.5, March 23, 2023](/docs/release-notes.md#1.0.5)
 
     `data-search-focus-mobile` desktop and touch device difference, new defaults
 

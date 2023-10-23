@@ -1,15 +1,27 @@
 # Release notes
 
+## 1.0.8, October 23, 2023
+
+- **Bug fix**: Dynamic width calculation did not handle the span element's styles.
+
+- **Change event trigger**
+
+    When selecting or deselecting items on picker, it did not triggered change event on select.
+
+- **Search on description**
+
+    Now default value also search from `data-desc` if it is given on `option`.
+
 ## 1.0.7, May 31, 2023
 
 - **Added sass variables and defaults for disabled select**
 
     Change text color `$ezmodus-dropdown-disabled-color`.
-    
+
     Change button background color `$ezmodus-dropdown-disabled-background-color`.
-    
+
     Change mouse cursor on hover `$ezmodus-dropdown-disabled-cursor`.
-    
+
     Change tick color `$ezmodus-dropdown-disabled-tick-color`.
 
 - **DATA-SELECTED-MAX**

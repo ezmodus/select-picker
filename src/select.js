@@ -40,6 +40,7 @@ class ezmodusSelectPicker {
     // only used in search and are lowercased
     values = [];
     texts = [];
+    descs = [];
     searchString = '';
 
     constructor(select) {
@@ -124,10 +125,15 @@ class ezmodusSelectPicker {
         });
         if(select.options.length) {
             for(let i = 0; i < select.options.length; i++) {
+                // console.log(select.options[i]);
                 this.originals[i] = select.options[i].text;
                 // used for search
                 this.values[i] = select.options[i].value.toLowerCase();
                 this.texts[i] = select.options[i].text.toLowerCase();
+                this.descs[i] = '';
+                if(select.options[i].dataset.desc) {
+                    this.descs[i] = select.options[i].dataset.desc.toLowerCase();
+                }
             }
         }
         this.render();
@@ -178,6 +184,7 @@ class ezmodusSelectPicker {
                 let i = picker.selectedItems.indexOf(pos);
                 picker.selectedItems.splice(i, 1);
             }
+            picker.select.dispatchEvent(new Event('change'));
         }
         else {
             let selectedMax = picker.settings.selectedMax;
@@ -187,6 +194,7 @@ class ezmodusSelectPicker {
             item.classList.add('selected');
             picker.select.options[pos].selected = "selected";
             picker.selectedItems.push(pos);
+            picker.select.dispatchEvent(new Event('change'));
         }
         picker.changeDropdownButton();
         // close automatically if not multiple select
@@ -373,6 +381,7 @@ class ezmodusSelectPicker {
         let searchloc = picker.settings.searchFrom;
         picker.texts.forEach(function(opttext, position) {
             let optvalue = picker.values[position];
+            let optdesc = picker.descs[position];
             let is_included, is_exluded = false;
             // go through exlusion first, because it is stronger
             exclusion.forEach((val) => {
@@ -383,6 +392,10 @@ class ezmodusSelectPicker {
                         return;
                     }
                     if(opttext.indexOf(val) !== -1) {
+                        is_exluded = true;
+                        return;
+                    }
+                    if(optdesc !== '' && optdesc.indexOf(val) !== -1) {
                         is_exluded = true;
                         return;
                     }
@@ -399,6 +412,10 @@ class ezmodusSelectPicker {
                     is_exluded = true;
                     return;
                 }
+                if(optdesc !== '' && optdesc.indexOf(val) !== -1) {
+                    is_exluded = true;
+                    return;
+                }
             });
             if(!is_exluded) {
                 inclusion.forEach((val) => {
@@ -412,6 +429,10 @@ class ezmodusSelectPicker {
                             is_included = true;
                             return;
                         }
+                        if(optdesc.indexOf(val) !== -1) {
+                            is_included = true;
+                            return;
+                        }
                     }
                     // option value only
                     if(searchloc == 'values') {
@@ -422,6 +443,10 @@ class ezmodusSelectPicker {
                     }
                     // option text (default)
                     if(opttext.indexOf(val) !== -1) {
+                        is_included = true;
+                        return;
+                    }
+                    if(optdesc !== '' && optdesc.indexOf(val) !== -1) {
                         is_included = true;
                         return;
                     }
@@ -541,11 +566,12 @@ class ezmodusSelectPicker {
         let li = picker.menu.querySelector('li');
         let link = li.querySelector('a');
         let icon = li.querySelector('i');
+        let span = li.querySelector('span');
 
         let styles = [
             'padding-left', 'padding-right',
             'margin-left', 'margin-right',
-            'border-left-width', 'border-right-width'
+            'border-left-width', 'border-right-width',
         ];
         styles.forEach(function(value) {
             width += parseInt(
@@ -559,6 +585,9 @@ class ezmodusSelectPicker {
             );
             width += parseInt(
                 window.getComputedStyle(icon, null).getPropertyValue(value)
+            );
+            width += parseInt(
+                window.getComputedStyle(span, null).getPropertyValue(value)
             );
         });
         width += parseInt(
