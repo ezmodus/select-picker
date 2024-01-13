@@ -24,8 +24,8 @@
 /* DROPDOWN BUTTON
 *****************************/
 
-$ezmodus-dropdown-border:                     1px solid #ced4da !default;
 $ezmodus-dropdown-border-radius:              3px !default;
+$ezmodus-dropdown-border:                     1px solid #ced4da !default;
 $ezmodus-dropdown-background-color:           #ffffff !default;
 $ezmodus-dropdown-color:                      #000000 !default;
 $ezmodus-dropdown-width:                      auto !default;
@@ -54,10 +54,14 @@ $ezmodus-menu-search-max-width:     initial !default;
 
 /*MENU SEARCH AREA AND INPUT
 *****************************/
-$ezmodus-search-padding:                6px 12px 0 12px !default;
-$ezmodus-search-input-padding:          6px 12px !default;
-$ezmodus-search-input-border:           1px solid #d6d6d6 !default;
-$ezmodus-search-input-border-radius:    3px !default;
+$ezmodus-search-padding:                    6px 12px 0 12px !default;
+$ezmodus-search-input-padding:              6px 12px !default;
+$ezmodus-search-input-border-radius:        3px !default;
+$ezmodus-search-input-border:               1px solid #d6d6d6 !default;
+$ezmodus-search-input-color:                initial !default;
+$ezmodus-search-input-placeholder-color:    initial !default;
+$ezmodus-search-input-background-color:     initial !default;
+$ezmodus-search-input-focus-outline-color:  initial !default;
 
 
 /* MENU CLEAR AREA AND BUTTON

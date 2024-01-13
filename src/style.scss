@@ -74,6 +74,14 @@
                 width: 100%;
                 border: $ezmodus-search-input-border;
                 border-radius: $ezmodus-search-input-border-radius;
+                color: $ezmodus-search-input-color;
+                background-color: $ezmodus-search-input-background-color;
+                &:focus, &:focus-visible, &:focus-within {
+                    outline-color: $ezmodus-search-input-focus-outline-color;
+                }
+                &::-webkit-input-placeholder {
+                    color: $ezmodus-search-input-placeholder-color;
+                }
             }
         }
         .ezmodus-clear {
