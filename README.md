@@ -18,6 +18,14 @@ It works pretty much the same as bootstrap-select, but this also adds few extra 
 
 ## Release notes
 
+- [1.0.11, January 16, 2024](/docs/release-notes.md#1.0.11)
+
+    Reset select picker support
+
+- [1.0.10, January 13, 2024](/docs/release-notes.md#1.0.10)
+
+    Added more variables to search input
+
 - [1.0.9, October 23, 2023](/docs/release-notes.md#1.0.9)
 
     Forgot to rebuild assets

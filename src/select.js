@@ -33,8 +33,10 @@ class ezmodusSelectPicker {
         clearButtonShow: false,
         clearButtonText: 'clear selection',
     };
-    selectedCount = 1;
+    selectedCount = 1; // how many allowed to select until replaced by counter
     selectedItems = [];
+    initial_values = []; // values in select option
+    initial_indexes = []; // li item positions
     // original values without string manipulation
     originals = [];
     // only used in search and are lowercased
@@ -43,8 +45,9 @@ class ezmodusSelectPicker {
     descs = [];
     searchString = '';
 
-    constructor(select) {
+    constructor(select, i = null) {
         this.select = select;
+        this.select.dataset['id'] = i;
         this.settings.multiple = select.multiple;
         this.settings.size = (select.size || undefined) ?? ((parseInt(this.settings.size)) ? 10 : null);
         this.settings.disabled = (select.disabled || undefined) ? true : false;
@@ -125,7 +128,9 @@ class ezmodusSelectPicker {
         });
         if(select.options.length) {
             for(let i = 0; i < select.options.length; i++) {
-                // console.log(select.options[i]);
+                if(select.options[i].selected) {
+                    this.initial_values.push(select.options[i].value);
+                }
                 this.originals[i] = select.options[i].text;
                 // used for search
                 this.values[i] = select.options[i].value.toLowerCase();
@@ -280,6 +285,7 @@ class ezmodusSelectPicker {
                     items[i].classList.remove('selected');
                 });
                 picker.selectedItems = [];
+                picker.selectedCount = 1;
             }
             picker.changeDropdownButton();
         });
@@ -302,6 +308,7 @@ class ezmodusSelectPicker {
         if(item.selected) {
             li.classList.add('selected');
             picker.selectedItems.push(index);
+            picker.initial_indexes.push(index);
         }
         // handle disabled
         if(item.disabled) {
@@ -528,8 +535,10 @@ class ezmodusSelectPicker {
         return menu;
     };
 
-    changeDropdownButton() {
-        let picker = this;
+    changeDropdownButton(picker = null) {
+        if(picker === null) {
+            picker = this;
+        }
         // if no selection then reset
         if(!picker.selectedItems.length) {
             picker.button.querySelector('span').innerHTML = picker.settings.title;
@@ -551,6 +560,42 @@ class ezmodusSelectPicker {
         let text = picker.settings.selectedText.replace('{0}', picker.selectedItems.length);
         picker.button.querySelector('span').innerHTML = text;
         picker.button.querySelector('span').innerText = text;
+    }
+
+    /**
+     * Reset form changes the selected menu items and button text back to default
+     * This is when eg input/button with type "reset" is given.
+     * In this reset for select is already happened.
+     */
+    reset() {
+        let picker = this;
+        // replace selected items with initial (copy, not reference)
+        picker.selectedItems = [...picker.initial_indexes];
+        // clear options which are not in initials
+        for(let i = 0; i < this.select.options.length; i++) {
+            let opt = this.select.options[i];
+            if(this.initial_values.includes(opt.value)) {
+                opt.selected = "selected";
+            }
+            else {
+                opt.selected = null;
+            }
+        }
+        // clear menu selected checkmark which are not in initial
+        let items = this.menu.querySelectorAll('li');
+        items.forEach(function(item, i) {
+            let p = parseInt(item.dataset.pos);
+            if(picker.initial_indexes.includes(p)) {
+                if(!item.selected) {
+                    item.classList.add('selected');
+                }
+            }
+            else {
+                item.classList.remove('selected');
+            }
+        });
+        // Reset the button
+        picker.changeDropdownButton(picker);
     }
 
     /**
@@ -705,7 +750,24 @@ class ezmodusSelectPicker {
 };
 // pickup all selects with the class and do the transition to new picker
 document.addEventListener('DOMContentLoaded', function() {
-    document.querySelectorAll('select.ezmodus-select-picker').forEach(
-        select => new ezmodusSelectPicker(select)
+    let ezmodus_select_pickers = [];
+    document.querySelectorAll('select.ezmodus-select-picker').forEach(function(select, i) {
+        ezmodus_select_pickers.push(new ezmodusSelectPicker(select, i));
+    });
+    document.querySelectorAll('*[type="reset"]').forEach(
+        (reset) => {
+            reset.addEventListener('click', function() {
+                // find closest form
+                let form = reset.closest('form');
+                // find all pickers
+                form.querySelectorAll('select.ezmodus-select-picker').forEach(
+                    (select) => {
+                        if(picker = ezmodus_select_pickers[select.dataset.id]) {
+                            picker.reset();
+                        }
+                    }
+                );
+            })
+        }
     );
 });

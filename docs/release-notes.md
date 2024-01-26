@@ -1,5 +1,17 @@
 # Release notes
 
+## 1.0.11, January 26, 2024
+
+- Reset button support. When form has input or button with `type="reset"`.
+  Button and menu items gets updated correctly.
+
+  This also adds all created pickers after DOM is loaded to array `ezmodus_select_pickers`.
+  Every picker has their indexed id. to reference to this. So picker can be easily picked and play with.
+
+## 1.0.10, January 13, 2024
+
+- Added more variables to search input
+
 ## 1.0.9, October 23, 2023
 
 - Assets rebuilt

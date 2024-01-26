@@ -313,6 +313,61 @@
             </div>
         </div>
 
+        <div class="testbox">
+            <form>
+                <div>
+                    <label>Test form reset</label>
+                    <select class="ezmodus-select-picker" data-size="8" data-search="true">
+                        <option value="1">
+                            <strong>Alfa</strong> Romeo
+                        </option>
+                        <option value="2">
+                            <span style="color: red;">Aston</span> <span class="color:lightblue;">Martin</span>
+                        </option>
+                        <option value="3" selected>Audi</option>
+                        <option value="4">Bentley</option>
+                        <option value="5">BMW</option>
+                    </select>
+                </div>
+                <div>
+                    <label>Multiple</label>
+                    <select class="ezmodus-select-picker"
+                        title="Choose car brands"
+                        data-size="8"
+                        data-search="true"
+                        data-search-from="both"
+                        data-search-placeholder="Find..."
+                        data-search-no-results="No results with string '{0}'"
+                        data-selected-text="{0} selected"
+                        data-selected-count="3"
+                        data-clear-show="true"
+                        multiple>
+                            <option value="Beta Juliet" data-desc="It looks nice from front">Alfa Romeo</option>
+                            <option value="Ästen Märtin"
+                                data-desc="James Bond likes to use these on the movies since 1950s to current year."
+                                selected>
+                                Aston Martin
+                            </option>
+                            <option value="The one" data-desc="My favourite car" selected>Audi</option>
+                            <option value="Beetly">Bentley</option>
+                            <option value="Bemari">BMW</option>
+                            <option value="Kadilakki" selected>Cadillac</option>
+                            <option value="Chevy">Chevrolet</option>
+                            <option value="Kraisler" selected>Chrysler</option>
+                            <option value="Dodge">Dodge</option>
+                            <option value="Ferrari">Ferrari</option>
+                    </select>
+                <div>
+                <div>
+                    <input type="text" name="test" value="Example" />
+                </div>
+                <div>
+                    <input type="reset" />
+                    <button type="reset">button reset</button>
+                </div>
+            </form>
+        </div>
+
     </div>
 </body>
 </html>
