@@ -142,6 +142,19 @@ class ezmodusSelectPicker {
             }
         }
         this.render();
+
+        let button  = this.button;
+        let observer = new MutationObserver(function(mutations) {
+            mutations.forEach(function(mutation) {
+                if(mutation.type === 'attributes' && mutation.attributeName === 'disabled') {
+                    let is_disabled = mutation.target.attributes['disabled'] ? true : false;
+                    (is_disabled) ? button.classList.add('disabled') : button.classList.remove('disabled');
+                }
+            });
+        });
+        observer.observe(select, {
+            attributes: true, // configure it to listen to attribute changes
+        });
     };
 
     handleAriaAttributes(source, target) {

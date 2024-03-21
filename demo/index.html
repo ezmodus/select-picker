@@ -15,7 +15,7 @@
     <div class="testarea">
         <div class="testbox">
             <label>Disabled</label>
-            <select class="ezmodus-select-picker" role="button" aria-hidden="false" disabled="disabled">
+            <select id="toggleDisable" class="ezmodus-select-picker" role="button" aria-hidden="false" disabled="disabled">
                 <option value="Alfa Romeo" role="option" aria-hidden="false" aria-label="Alfa Romeo">
                     Alfa Romeo
                 </option>
@@ -25,6 +25,10 @@
             </select>
 
             <br />
+
+            <button class="toggle-disable" data-target="toggleDisable">Toggle disable / enable</button>
+
+            <br /><br />
 
             <label>Single select (just a class)</label>
             <select class="ezmodus-select-picker" role="button" aria-hidden="false">

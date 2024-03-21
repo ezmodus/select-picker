@@ -1,5 +1,11 @@
 # Release notes
 
+## 1.0.12, March 21, 2024
+
+- MutationObserver
+
+  Observes `select` element's `disabled` attribute and reflects changes to button too.
+
 ## 1.0.11, January 26, 2024
 
 - Reset button support. When form has input or button with `type="reset"`.

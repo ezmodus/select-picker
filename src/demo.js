@@ -7,3 +7,12 @@ buttons.forEach(function(button) {
 
     });
 });
+
+let disables = document.querySelectorAll('.toggle-disable');
+
+disables.forEach(function(button) {
+    button.addEventListener('click', function() {
+        let target = document.getElementById(button.dataset.target);
+        target.toggleAttribute('disabled');
+    });
+});

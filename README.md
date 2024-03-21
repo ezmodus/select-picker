@@ -18,6 +18,10 @@ It works pretty much the same as bootstrap-select, but this also adds few extra 
 
 ## Release notes
 
+- [1.0.12, March 21, 2024](/docs/release-notes.md#1.0.12)
+
+    MutationObserver
+
 - [1.0.11, January 16, 2024](/docs/release-notes.md#1.0.11)
 
     Reset select picker support
