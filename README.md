@@ -186,7 +186,7 @@ Add these attributes with prefix `data-`.
 |-----------------------|---------------------------|-----------------
 | size                  | null                      | This is another way to setup how many items are shown when menu opens. This is is preferable way to setup without worrying browser to default render select with size and then hides it. On page load selects' with size may look bigger before transforming them to select picker.
 | tick                  | true                      | Shows tick on dropdown.
-| search                | false                     | If 'true' then show search input for list items. [Click here to see how search works](search.md)
+| search                | false                     | If 'true' then show search input for list items. [Click here to see how search works](docs/search.md)
 | search-focus          | true                     | If set, then automatically focus on search on desktop.
 | search-focus-mobile   | false                    | If set, then automatically focus on search on touch devices.
 | search-from           | null                      | Search from texts, if "values" then search looks values of "option value", if "both" then look for values or texts.
@@ -204,7 +204,7 @@ Add these attributes with prefix `data-`.
 
 | Attribute | Default   | Description
 |-----------|-----------|--------------
-| data-desc |           | Text data to show as extra description with own styling. If texts are used then size of the menu is direcctive because items heights varies.
+| data-desc |           | Text data to show as extra description with own styling. If texts are used then size of the menu is directive because items heights varies.
 
 ---
 
