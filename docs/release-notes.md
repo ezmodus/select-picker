@@ -1,5 +1,12 @@
 # Release notes
 
+## 1.0.13, September 16, 2024
+
+- Fixes menu ul-element height
+
+  When closed visibility is hidden, but height was still noticed (could trigger overflow).
+  Now on closed height of the element is 0 and will be auto on open menu.
+
 ## 1.0.12, March 21, 2024
 
 - MutationObserver

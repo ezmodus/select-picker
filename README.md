@@ -18,6 +18,10 @@ It works pretty much the same as bootstrap-select, but this also adds few extra 
 
 ## Release notes
 
+- [1.0.13, September 16, 2024](/docs/release-notes.md#1.0.13)
+
+    Fixes menu ul element height
+
 - [1.0.12, March 21, 2024](/docs/release-notes.md#1.0.12)
 
     MutationObserver
