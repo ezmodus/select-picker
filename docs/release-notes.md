@@ -1,5 +1,11 @@
 # Release notes
 
+## 1.0.14, April 16, 2025
+
+- Separate ezmodusSelectPicker class into it own file so it can be exported individually.
+
+- Support optgroup-tag and also legend tag inside optgroup
+
 ## 1.0.13, September 16, 2024
 
 - Fixes menu ul-element height

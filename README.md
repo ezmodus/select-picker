@@ -18,6 +18,10 @@ It works pretty much the same as bootstrap-select, but this also adds few extra 
 
 ## Release notes
 
+- [1.0.14, April 16, 2025](/docs/release-notes.md#1.0.14)
+
+    Support to Optgroups and their legend tags, also separate class itself to own file.
+
 - [1.0.13, September 16, 2024](/docs/release-notes.md#1.0.13)
 
     Fixes menu ul element height

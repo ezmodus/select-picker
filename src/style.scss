@@ -112,7 +112,22 @@
             margin: 6px 0 0 0;
             padding: 0;
             height: 0;
-            li {
+            li.group {
+                padding: $ezmodus-list-group-padding;
+                color: $ezmodus-list-group-color;
+                background-color: $ezmodus-list-group-background-color;
+                &:hover {
+                    background-color: $ezmodus-list-group-background-color-hover;
+                }
+                .item-wrapper {
+                    display: flex;
+                    align-items: flex-start;
+                    .text {
+                        font-weight: $ezmodus-list-group-font-weight;
+                    }
+                }
+            }
+            li.item {
                 padding: $ezmodus-list-item-padding;
                 color: $ezmodus-list-item-color;
                 background-color: $ezmodus-list-item-background-color;
