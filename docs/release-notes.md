@@ -1,5 +1,9 @@
 # Release notes
 
+## 1.0.15, April 16, 2025
+
+    Fixes single selection on menu which broke down from last patch
+
 ## 1.0.14, April 16, 2025
 
 - Separate ezmodusSelectPicker class into it own file so it can be exported individually.

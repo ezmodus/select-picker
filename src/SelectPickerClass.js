@@ -203,14 +203,14 @@ class ezmodusSelectPicker {
         // if not multi selection then wipe out existing select
         if(!picker.settings.multiple) {
             let options = picker.select.querySelectorAll('option');
-            let items = Array.from(item.parentNode.children);
+            let items = Array.from(item.parentNode.querySelectorAll('.item'));
             picker.selectedItems.forEach(function(i) {
                 options[i].selected = null;
                 items[i].classList.remove('selected');
             });
             picker.selectedItems = [];
         }
-        if(item.classList.contains('selected')) {
+        if(item.classList.contains('item') && item.classList.contains('selected')) {
             item.classList.remove('selected');
             picker.select.options[pos].selected = "";
             if(picker.selectedItems.length) {
