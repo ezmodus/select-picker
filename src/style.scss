@@ -116,6 +116,7 @@
                 padding: $ezmodus-list-group-padding;
                 color: $ezmodus-list-group-color;
                 background-color: $ezmodus-list-group-background-color;
+                margin-left: $ezmodus-list-group-margin-left;
                 &:hover {
                     background-color: $ezmodus-list-group-background-color-hover;
                 }
@@ -132,6 +133,9 @@
                 color: $ezmodus-list-item-color;
                 background-color: $ezmodus-list-item-background-color;
                 cursor: pointer;
+                &.group-item {
+                    padding-left: $ezmodus-list-group-item-padding-left;
+                }
                 &:hover:not([data-disabled="true"]) {
                     background-color: $ezmodus-list-item-background-color-hover;
                 }

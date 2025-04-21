@@ -69,6 +69,29 @@ search: "bruce wayne +jonathan kent +abigail white"
 // Returns "Bruce Wayne", "Jonathan Kent", "Abigail Whitehair"
 ```
 
+If `select` element has `optgroup` then also these work as groups and can be included or excluded.
+
+```javascript
+// group search strings are double + to include or double - to exclude
+// pseudo data
+list: {
+    'American': [
+        'Cadillac',
+        'Chervolet',
+        'Dodge',
+        'Ford',
+    ],
+    'British': [
+        'Alfa romeo',
+        'Bentley',
+        'Jaguar',
+    ],
+}
+search: "a --am"
+// This would only return items which has letter "a" in it, but excludes group which has "am" in it.
+// This means that only return british values like "Alfa romeo" and "Jaguar".
+```
+
 ---
 
 [Back to README.md](../README.md)

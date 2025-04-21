@@ -19,6 +19,7 @@ class ezmodusSelectPicker {
         size: 1,
         title: 'Select',
         dropdownTick: true,
+        selectedCount: 1, // how many allowed to select until replaced by counter
         selectedMax: null,
         selectedText: '{0} selected',
         menuHeight: 0,
@@ -33,20 +34,11 @@ class ezmodusSelectPicker {
         clearButtonShow: false,
         clearButtonText: 'clear selection',
     };
-    selectedCount = 1; // how many allowed to select until replaced by counter
-    selectedItems = [];
-    initial_values = []; // values in select option
-    initial_indexes = []; // li item positions
-    optgroups = {}; // if option is under opt group hold the group and the data option value in it
-    // original values without string manipulation
-    originals = [];
-    // only used in search and are lowercased
-    values = [];
-    texts = [];
-    descs = [];
+    items = [];
     searchString = '';
 
     constructor(select, i = null) {
+        let picker = this;
         this.select = select;
         this.select.dataset['id'] = i;
         this.settings.multiple = select.multiple;
@@ -104,7 +96,7 @@ class ezmodusSelectPicker {
                     this.settings.searchNoResultsText = value;
                     break;
                 case 'selectedCount':
-                    this.selectedCount = parseInt(value);
+                    this.settings.selectedCount = parseInt(value);
                     break;
                 case 'selectedText':
                     this.settings.selectedText = value;
@@ -127,38 +119,70 @@ class ezmodusSelectPicker {
                     break;
             }
         });
-        if(select.options.length) {
-            for(let i = 0; i < select.options.length; i++) {
-                // handle optgroups
-                if(select.options[i].parentNode.nodeName === 'OPTGROUP') {
-                    let og = select.options[i].parentNode;
-                    let label = og.label;
-                    // check if legend is used
-                    let legend = og.getElementsByTagName('legend');
-                    if(legend.length > 0) {
-                        label = legend[0].innerText; // first legend text
-                    }
-                    if(this.optgroups[label] === undefined) {
-                        this.optgroups[label] = [];
-                    }
-                    this.optgroups[label].push(select.options[i]);
-                }
-                if(select.options[i].selected) {
-                    this.initial_values.push(select.options[i].value);
-                }
-                this.originals[i] = select.options[i].text;
-                // used for search
-                this.values[i] = select.options[i].value.toLowerCase();
-                this.texts[i] = select.options[i].text.toLowerCase();
-                this.descs[i] = '';
-                if(select.options[i].dataset.desc) {
-                    this.descs[i] = select.options[i].dataset.desc.toLowerCase();
-                }
-            }
-        }
-        this.render();
 
-        let button  = this.button;
+        Object.values(select.children).forEach(function(child, i) {
+            if(child.nodeName === 'OPTGROUP') {
+                let group_name = child.label;
+                // check if legend is used
+                let legend = child.getElementsByTagName('legend');
+                if(legend.length > 0) {
+                    group_name = legend[0].innerText; // first legend text
+                }
+                picker.items.push({
+                    'group': true,
+                    'label': group_name,
+                    'listelem': null,
+                    // how many, direct options
+                    'total': child.getElementsByTagName('option').length,
+                    // tracks for search how many are matched, default total
+                    'match': child.getElementsByTagName('option').length,
+                    'items': [],
+                });
+                let last_index = picker.items.length - 1;
+                Object.values(child.children).forEach(function(option, i) {
+                    if(option.nodeName === 'OPTION') {
+                        picker.items[last_index].items.push({
+                            'elem': option,
+                            'listelem': null, // this is the element what is created into list
+                            'visible': true,
+                            'initial': option.selected ? true : false,
+                            'selected': option.selected ? true : false,
+                            'search_value': option.value.toLowerCase(),
+                            'search_label': option.text.toLowerCase(),
+                            'search_desc': (option.dataset.desc) ? option.dataset.desc.toLowerCase() : '',
+                        });
+                    }
+                });
+                return;
+            }
+            picker.items.push({
+                'group': false,
+                'label': null,
+                'total': 1, // how many, direct options this is always 1
+                'match': 1, // tracks for search how many are matched
+                'items': [{
+                    'elem': child,
+                    'listelem': null, // this is the element what is created into list
+                    'visible': true,
+                    'initial': child.selected ? true : false,
+                    'selected': child.selected ? true : false,
+                    'search_value': child.value.toLowerCase(),
+                    'search_label': child.text.toLowerCase(),
+                    'search_desc': (child.dataset.desc) ? child.dataset.desc.toLowerCase() : '',
+                }],
+            });
+        });
+
+        this.render();
+        // let testarea = document.createElement('div');
+        // testarea.id = picker.select.id + '-testarea';
+        // testarea.style.position = 'relative';
+        // testarea.style.left = '320px';
+        // testarea.style.top = '-30px';
+        // picker.dropdown.append(testarea);
+        // this.testRender();
+
+        let button = this.button;
         let observer = new MutationObserver(function(mutations) {
             mutations.forEach(function(mutation) {
                 if(mutation.type === 'attributes' && mutation.attributeName === 'disabled') {
@@ -171,6 +195,70 @@ class ezmodusSelectPicker {
             attributes: true, // configure it to listen to attribute changes
         });
     };
+
+    /** only for debugging */
+    testRender() {
+        if(!this.dropdown || this.select.id != 'optgroup-single') {
+            return;
+        }
+        let picker = this;
+        let testarea = document.getElementById(picker.select.id+'-testarea');
+        if(!testarea) {
+            return;
+        }
+        testarea.innerHTML = '';
+        testarea.innerText = '';
+        picker.items.forEach((data) => {
+            if(data.group) {
+                let group = document.createElement('div');
+                group.innerText = data.label;
+                group.style.color = '#000000';
+                group.style.fontWeight = 600;
+                if(data.match == 0) {
+                    group.style.color = '#b7575b';
+                }
+                testarea.appendChild(group);
+                data.items.forEach((item) => {
+                    let div = document.createElement('div');
+                    div.innerText = item.elem.label;
+                    if(item.selected) {
+                        div.innerText += ' (selected)';
+                    }
+                    div.style.paddingLeft = '20px';
+                    if(!item.visible) {
+                        div.style.color = '#b7575b';
+                    }
+                    if(item.elem.dataset.desc !== undefined) {
+                        let divdesc = document.createElement('div');
+                        divdesc.innerText = item.elem.dataset.desc;
+                        divdesc.style.color = '#7d7d7d';
+                        div.appendChild(divdesc);
+                    }
+                    testarea.appendChild(div);
+                });
+            }
+            else {
+                data.items.forEach((item) => {
+                    let div = document.createElement('div');
+                    div.innerText = item.elem.label;
+                    div.style.color = '#000000';
+                    if(item.selected) {
+                        div.innerText += ' (selected)';
+                    }
+                    if(!item.visible) {
+                        div.style.color = '#b7575b';
+                    }
+                    if(item.elem.dataset.desc !== undefined) {
+                        let divdesc = document.createElement('div');
+                        divdesc.innerText = item.elem.dataset.desc;
+                        divdesc.style.color = '#7d7d7d';
+                        div.appendChild(divdesc);
+                    }
+                    testarea.appendChild(div);
+                });
+            }
+        });
+    }
 
     handleAriaAttributes(source, target) {
         Object.entries(source.attributes).forEach(([index, node]) => {
@@ -187,7 +275,7 @@ class ezmodusSelectPicker {
      * @param {*} item
      */
     selectMenuItem(picker, e) {
-        let item = this;
+        let elem = this;
         // Keyboard event
         if(e.type === 'keydown') {
             // if not Space then proceed normally, but do not let
@@ -199,36 +287,55 @@ class ezmodusSelectPicker {
             // prevent this
             e.preventDefault();
         }
-        let pos = parseInt(item.dataset.pos);
-        // if not multi selection then wipe out existing select
-        if(!picker.settings.multiple) {
-            let options = picker.select.querySelectorAll('option');
-            let items = Array.from(item.parentNode.querySelectorAll('.item'));
-            picker.selectedItems.forEach(function(i) {
-                options[i].selected = null;
-                items[i].classList.remove('selected');
+        let selected = Object.values(picker.select.options).filter((o) => o.selected);
+
+        picker.items.forEach((data) => {
+            data.items.forEach((item) => {
+                // if not multiple picker then unselect all which are not element
+                if(!picker.settings.multiple) {
+                    if(item.listelem === elem) {
+                        if(item.selected) {
+                            item.elem.selected = null;
+                            item.selected = false;
+                            item.listelem.classList.remove('selected');
+                        }
+                        else {
+                            item.elem.selected = true;
+                            item.selected = true;
+                            item.listelem.classList.add('selected');
+                        }
+                    }
+                    else {
+                        item.elem.selected = null;
+                        item.selected = false;
+                        item.listelem.classList.remove('selected');
+                    }
+                }
+                // multi select and select max
+                else {
+                    if(item.listelem === elem) {
+                        // remove selection
+                        if(item.selected) {
+                            item.elem.selected = null;
+                            item.selected = false;
+                            item.listelem.classList.remove('selected');
+                        }
+                        // add selection
+                        else {
+                            let selectedMax = picker.settings.selectedMax;
+                            if(selectedMax !== null && selected.length == selectedMax) {
+                                return;
+                            }
+                            item.elem.selected = true;
+                            item.selected = true;
+                            item.listelem.classList.add('selected');
+                        }
+                    }
+                }
             });
-            picker.selectedItems = [];
-        }
-        if(item.classList.contains('item') && item.classList.contains('selected')) {
-            item.classList.remove('selected');
-            picker.select.options[pos].selected = "";
-            if(picker.selectedItems.length) {
-                let i = picker.selectedItems.indexOf(pos);
-                picker.selectedItems.splice(i, 1);
-            }
-            picker.select.dispatchEvent(new Event('change'));
-        }
-        else {
-            let selectedMax = picker.settings.selectedMax;
-            if(selectedMax !== null && picker.selectedItems.length == selectedMax) {
-                return;
-            }
-            item.classList.add('selected');
-            picker.select.options[pos].selected = "selected";
-            picker.selectedItems.push(pos);
-            picker.select.dispatchEvent(new Event('change'));
-        }
+        });
+
+        picker.select.dispatchEvent(new Event('change'));
         picker.changeDropdownButton();
         // close automatically if not multiple select
         if(!picker.settings.multiple) {
@@ -305,15 +412,15 @@ class ezmodusSelectPicker {
         btn.name = 'clear';
         btn.innerHTML = picker.settings.clearButtonText;
         btn.addEventListener('click', function(e) {
-            if(picker.selectedItems.length) {
-                let options = picker.select.querySelectorAll('option');
-                let items = btn.closest('.ezmodus-menu').querySelectorAll('li');
-                picker.selectedItems.forEach(function(i) {
-                    options[i].selected = null;
-                    items[i].classList.remove('selected');
+            let selected = Object.values(picker.select.options).filter((o) => o.selected);
+            if(selected.length) {
+                picker.items.forEach((data) => {
+                    data.items.forEach((i) => {
+                        i.selected = false;
+                        i.elem.selected = null;
+                        i.listelem.classList.remove('selected');
+                    });
                 });
-                picker.selectedItems = [];
-                picker.selectedCount = 1;
             }
             picker.changeDropdownButton();
         });
@@ -322,14 +429,14 @@ class ezmodusSelectPicker {
     };
 
 
-    createMenuGroup(picker, label) {
+    createMenuGroup(data) {
         let li = document.createElement('li');
         li.tabIndex = -1;
         li.classList.add('group');
 
         let span = document.createElement('span');
         span.classList.add('text');
-        span.innerHTML = label;
+        span.innerHTML = data.label;
 
         // wrap icon and span under div and set them under a-element
         let wrapper = document.createElement('div');
@@ -339,33 +446,35 @@ class ezmodusSelectPicker {
         return li;
     };
 
-    /*
-    Create menu item with structure
-    li > div > a > i (checkmark) + span (text)
-       > div (subtext if set)
-    */
-    createMenuItem(picker, index, item) {
+    /**
+     * Create menu item
+     * @param {*} group (picker.items index data)
+     * @param {*} data  (picker.items[x].items index)
+     * @returns 
+     */
+    createMenuItem(group, data) {
+        let picker = this;
         let li = document.createElement('li');
         li.tabIndex = 0;
-        li.dataset.pos = index;
         li.classList.add('item');
+        if(group.group) {
+            li.classList.add('group-item');
+        }
 
-        this.handleAriaAttributes(item, li);
+        this.handleAriaAttributes(data.elem, li);
 
-        if(item.selected) {
+        if(data.selected) {
             li.classList.add('selected');
-            picker.selectedItems.push(index);
-            picker.initial_indexes.push(index);
         }
         // handle disabled
-        if(item.disabled) {
+        if(data.elem.disabled) {
             li.dataset.disabled = "true";
         }
         // if not disabled add click event to select
         else {
             this.addHandlerSelect(picker, li);
         }
-        item.classList.forEach(function(klass) {
+        data.elem.classList.forEach(function(klass) {
             li.classList.add(klass);
         });
 
@@ -374,7 +483,7 @@ class ezmodusSelectPicker {
 
         let span = document.createElement('span');
         span.classList.add('text');
-        span.innerHTML = item.text;
+        span.innerHTML = data.elem.text;
 
         let a = document.createElement('a');
 
@@ -387,10 +496,10 @@ class ezmodusSelectPicker {
 
         // if item <option> has data-attribute "desc" then
         // create extra text area for that information
-        if(item.dataset.desc) {
+        if(data.elem.dataset.desc) {
             let subtext = document.createElement('div');
             subtext.classList.add('subtext');
-            subtext.innerHTML = item.dataset.desc;
+            subtext.innerHTML = data.elem.dataset.desc;
             a.appendChild(subtext);
         }
         // append the a-element into li-element
@@ -407,19 +516,38 @@ class ezmodusSelectPicker {
         const regex = new RegExp(/.+?(?=\s[+|-])|.+/gm);
         let params = [...this.value.matchAll(regex)];
         let cleaned_params = [];
-        let exclusion = [];
+        let group_inclusion = [];
+        let group_exclusion = [];
         let inclusion = [];
+        let exclusion = [];
+
         // Go through params, trim them and separate them based on
         // exclusion or inclusion
         for(let i = 0; i < params.length; i++) {
             let string = params[i][0].trim().toLowerCase();
             cleaned_params.push(string);
+            if(string.startsWith('--')) {
+                if(string.substr(2) !== '') {
+                    group_exclusion.push(string.substr(2));
+                }
+                continue;
+            }
+            if(string.startsWith('++')) {
+                if(string.substr(2) !== '') {
+                    group_inclusion.push(string.substr(2));
+                }
+                continue;
+            }
             if(string.startsWith('-')) {
-                exclusion.push(string.substr(1));
+                if(string.substr(1) !== '') {
+                    exclusion.push(string.substr(1));
+                }
                 continue;
             }
             if(string.startsWith('+')) {
-                inclusion.push(string.substr(1));
+                if(string.substr(1) !== '') {
+                    inclusion.push(string.substr(1));
+                }
                 continue;
             }
             // otherwise it is a search term itself
@@ -429,104 +557,106 @@ class ezmodusSelectPicker {
         // update the search string for information
         picker.searchString = cleaned_params.join(' ');
 
-        // go through picker.texts (because values are the same height)
-        // and checks based on settings.searchFrom and parsed search
-        let indexes = [];
-        let searchloc = picker.settings.searchFrom;
-        picker.texts.forEach(function(opttext, position) {
-            let optvalue = picker.values[position];
-            let optdesc = picker.descs[position];
-            let is_included, is_exluded = false;
-            // go through exlusion first, because it is stronger
-            exclusion.forEach((val) => {
-                // option value or text
-                if(searchloc == 'both') {
-                    if(optvalue.indexOf(val) !== -1) {
-                        is_exluded = true;
-                        return;
-                    }
-                    if(opttext.indexOf(val) !== -1) {
-                        is_exluded = true;
-                        return;
-                    }
-                    if(optdesc !== '' && optdesc.indexOf(val) !== -1) {
-                        is_exluded = true;
-                        return;
-                    }
-                }
-                // option value only
-                if(searchloc == 'values') {
-                    if(optvalue.indexOf(val) !== -1) {
-                        is_exluded = true;
-                        return;
-                    }
-                }
-                // option text (default)
-                if(opttext.indexOf(val) !== -1) {
-                    is_exluded = true;
-                    return;
-                }
-                if(optdesc !== '' && optdesc.indexOf(val) !== -1) {
-                    is_exluded = true;
-                    return;
+        // helper function
+        function search_from_item(item, search_array) {
+            let search_type = picker.settings.searchFrom;
+            let is_found = false;
+            search_array.forEach((search_string) => {
+                switch(search_type) {
+                    case 'both':
+                        if(
+                            item.search_value.indexOf(search_string) !== -1 ||
+                            item.search_label.indexOf(search_string) !== -1 ||
+                            item.search_desc.indexOf(search_string) !== -1
+                        ) {
+                            is_found = true;
+                        }
+                        break;
+                    // values only
+                    case 'values':
+                        if(item.search_value.indexOf(search_string) !== -1) {
+                            is_found = true;
+                        }
+                        break;
+                    default:
+                        if(
+                            item.search_label.indexOf(search_string) !== -1 ||
+                            item.search_desc.indexOf(search_string) !== -1
+                        ) {
+                            is_found = true;
+                        }
                 }
             });
-            if(!is_exluded) {
-                inclusion.forEach((val) => {
-                    // option value or text
-                    if(searchloc == 'both') {
-                        if(optvalue.indexOf(val) !== -1) {
-                            is_included = true;
-                            return;
-                        }
-                        if(opttext.indexOf(val) !== -1) {
-                            is_included = true;
-                            return;
-                        }
-                        if(optdesc.indexOf(val) !== -1) {
-                            is_included = true;
-                            return;
-                        }
-                    }
-                    // option value only
-                    if(searchloc == 'values') {
-                        if(optvalue.indexOf(val) !== -1) {
-                            is_included = true;
-                            return;
-                        }
-                    }
-                    // option text (default)
-                    if(opttext.indexOf(val) !== -1) {
-                        is_included = true;
-                        return;
-                    }
-                    if(optdesc !== '' && optdesc.indexOf(val) !== -1) {
-                        is_included = true;
-                        return;
-                    }
-                });
+            return is_found;
+        }
+        function search_from_group(data, search_array) {
+            if(!data.group || search_array.length === 0) {
+                return null;
             }
-            if(is_included) {
-                indexes.push(position);
-            }
+            let is_found = false;
+            let group_name = data.label.toLowerCase().trim();
+            search_array.forEach((search_string) => {
+                if(group_name.indexOf(search_string) !== -1) {
+                    is_found = true;
+                }
+            });
+            return is_found;
+        }
+        // check data and modify visibility on items based on search
+        picker.items.forEach((data) => {
+            let is_group_included = search_from_group(data, group_inclusion);
+            let is_group_excluded = search_from_group(data, group_exclusion);
+            data.items.forEach((i) => {
+                if(inclusion.length === 0 && exclusion.length === 0) {
+                    i.visible = true;
+                    data.match = data.total;
+                    return;
+                }
+                let is_included = search_from_item(i, inclusion);
+                let is_excluded = search_from_item(i, exclusion);
+                i.visible = true;
+
+                if(is_group_included) {
+                    i.visible = true;
+                }
+                if(!is_included) {
+                    i.visible = false;
+                }
+                if(is_excluded) {
+                    i.visible = false;
+                }
+                if(is_group_excluded) {
+                    i.visible = false;
+                }
+            });
+            let viscount = data.items.filter((o) => o.visible === true).length;
+            data.match = viscount;
         });
-        // Update menu list items based on search
-        // hide those which are not in index list
-        menu.querySelectorAll('li').forEach(function(obj) {
-            // if nothing to look then make sure all is reseted
-            if(!cleaned_params.length) {
-                obj.style.display = 'list-item';
-                return;
+        picker.updateMenu();
+        // picker.testRender();
+    }
+
+    /** only for debugging */
+    updateMenu() {
+        let picker = this;
+        this.items.forEach((data) => {
+            if(data.group) {
+                data.listelem.style.display = 'list-item';
+                if(data.match == 0) {
+                    data.listelem.style.display = 'none';
+                }
             }
-            if(indexes.includes(parseInt(obj.dataset.pos))) {
-                obj.style.display = 'list-item';
-                return;
-            }
-            obj.style.display = 'none';
+            data.items.forEach((item) => {
+                item.listelem.style.display = 'list-item';
+                if(!item.visible) {
+                    item.listelem.style.display = 'none';
+                }
+            });
         });
-        // results text
-        let noresults = menu.querySelector('div.no-results');
-        if(indexes.length || picker.searchString == '') {
+        let matches = picker.items.filter((o) => o.match > 0).length;
+        
+        let noresults = picker.menu.querySelector('div.no-results');
+        if(matches > 0 || picker.searchString == '') {
             noresults.innerHTML = '';
             noresults.innerText = '';
             noresults.style.display = 'none';
@@ -538,6 +668,7 @@ class ezmodusSelectPicker {
             noresults.style.display = 'block';
         }
     }
+
     createMenu() {
         let picker = this;
         let select = this.select;
@@ -567,29 +698,21 @@ class ezmodusSelectPicker {
         }
         // create list of items from the select
         let ul = document.createElement('ul');
-        if(select.options.length) {
-            // check if groups are set
-            if(Object.keys(picker.optgroups).length) {
-                let itempos = 0;
-                Object.entries(picker.optgroups).forEach(([group, options]) => {
-                    // create group
-                    let li = this.createMenuGroup(picker, group);
-                    ul.appendChild(li);
-                    // create item
-                    for(let i = 0; i < options.length; i++) {
-                        let li = this.createMenuItem(picker, itempos, options[i]);
-                        ul.appendChild(li);
-                        itempos++;
-                    }
-                });
+        ul.classList.add('list');
+
+        picker.items.forEach((data, i) => {
+            if(data.group) {
+                let li = this.createMenuGroup(data);
+                data.listelem = li;
+                ul.appendChild(li);
             }
-            else {
-                for(let i = 0; i < select.options.length; i++) {
-                    let li = this.createMenuItem(picker, i, select.options[i]);
-                    ul.appendChild(li);
-                }
-            }
-        }
+            data.items.forEach((item, j) => {
+                let li = this.createMenuItem(data, item);
+                // li.dataset.pos = i+'-'+j;
+                item.listelem = li;
+                ul.appendChild(li);
+            });
+        });
         menu.appendChild(ul);
         // add placeholder item for no results text
         let noresults = document.createElement('div');
@@ -603,17 +726,18 @@ class ezmodusSelectPicker {
         if(picker === null) {
             picker = this;
         }
+        let selected = Object.values(picker.select.options).filter((o) => o.selected);
         // if no selection then reset
-        if(!picker.selectedItems.length) {
+        if(!selected.length) {
             picker.button.querySelector('span').innerHTML = picker.settings.title;
             picker.button.querySelector('span').innerText = picker.settings.title;
             return;
         }
         // show selection as texts
-        if(picker.selectedCount > picker.selectedItems.length -1) {
+        if(picker.settings.selectedCount > selected.length -1) {
             let texts = [];
-            picker.selectedItems.forEach(function(i) {
-                texts.push(picker.originals[i]);
+            selected.forEach(function(i) {
+                texts.push(i.label);
             });
             let text = texts.join(', ');
             picker.button.querySelector('span').innerHTML = text;
@@ -621,7 +745,7 @@ class ezmodusSelectPicker {
             return;
         }
         // otherwise replace with data-count-selected-text
-        let text = picker.settings.selectedText.replace('{0}', picker.selectedItems.length);
+        let text = picker.settings.selectedText.replace('{0}', selected.length);
         picker.button.querySelector('span').innerHTML = text;
         picker.button.querySelector('span').innerText = text;
     }
@@ -633,30 +757,17 @@ class ezmodusSelectPicker {
      */
     reset() {
         let picker = this;
-        // replace selected items with initial (copy, not reference)
-        picker.selectedItems = [...picker.initial_indexes];
-        // clear options which are not in initials
-        for(let i = 0; i < this.select.options.length; i++) {
-            let opt = this.select.options[i];
-            if(this.initial_values.includes(opt.value)) {
-                opt.selected = "selected";
-            }
-            else {
-                opt.selected = null;
-            }
-        }
-        // clear menu selected checkmark which are not in initial
-        let items = this.menu.querySelectorAll('li');
-        items.forEach(function(item, i) {
-            let p = parseInt(item.dataset.pos);
-            if(picker.initial_indexes.includes(p)) {
-                if(!item.selected) {
-                    item.classList.add('selected');
+        picker.items.forEach((data) => {
+            data.items.forEach((i) => {
+                i.selected = false;
+                i.elem.selected = null;
+                i.listelem.classList.remove('selected');
+                if(i.initial) {
+                    i.selected = true;
+                    i.elem.selected = true;
+                    i.listelem.classList.add('selected');
                 }
-            }
-            else {
-                item.classList.remove('selected');
-            }
+            });
         });
         // Reset the button
         picker.changeDropdownButton(picker);
@@ -673,6 +784,9 @@ class ezmodusSelectPicker {
         // get elements
         let ul = picker.menu.querySelector('ul');
         let li = picker.menu.querySelector('li');
+        if(li === null) {
+            return;
+        }
         let link = li.querySelector('a');
         let icon = li.querySelector('i');
         let span = li.querySelector('span');

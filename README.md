@@ -18,6 +18,10 @@ It works pretty much the same as bootstrap-select, but this also adds few extra 
 
 ## Release notes
 
+- [1.0.16, April 29, 2025](/docs/release-notes.md#1.0.16)
+
+    Search function with optgroups
+
 - [1.0.15, April 17, 2025](/docs/release-notes.md#1.0.15)
 
     Fixes single selection on menu which broke down from last patch

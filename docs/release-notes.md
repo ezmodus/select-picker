@@ -1,5 +1,10 @@
 # Release notes
 
+## 1.0.16, April 29, 2025
+
+    Search includes now optgroups. If optgroup name is excluded all items are also excluded.
+    Otherwise refactored internal logic. Gives better support in future to do eg. search rules
+
 ## 1.0.15, April 16, 2025
 
     Fixes single selection on menu which broke down from last patch
