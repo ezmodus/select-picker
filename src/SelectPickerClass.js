@@ -14,6 +14,7 @@ class ezmodusSelectPicker {
     menu = null; // div menu (ezmodus-menu)
     // settings
     settings = {
+        debug: false,
         isMobile: 'ontouchstart' in window,
         multiple: false,
         size: 1,
@@ -24,6 +25,7 @@ class ezmodusSelectPicker {
         selectedText: '{0} selected',
         menuHeight: 0,
         menuItemHeight: null,
+        calcMenuWidth: 0,
         menuDynamic: null,
         searchShow: false,
         searchFocus: true,
@@ -49,6 +51,7 @@ class ezmodusSelectPicker {
         }
         /**
          * Example settings from data attributes
+            data-debug="true"
             data-tick="false"
             data-size="8"
             data-search="true"
@@ -66,6 +69,9 @@ class ezmodusSelectPicker {
          */
         Object.entries(select.dataset).forEach(([data, value]) => {
             switch(data) {
+                case 'debug':
+                    this.settings.debug = (value.toLowerCase() === 'true') ? true : false;
+                    break;
                 case 'size':
                     this.settings.size = parseInt(value);
                     break;
@@ -174,13 +180,14 @@ class ezmodusSelectPicker {
         });
 
         this.render();
-        // let testarea = document.createElement('div');
-        // testarea.id = picker.select.id + '-testarea';
-        // testarea.style.position = 'relative';
-        // testarea.style.left = '320px';
-        // testarea.style.top = '-30px';
-        // picker.dropdown.append(testarea);
-        // this.testRender();
+        // Create debugger if set
+        if(this.settings.debug) {
+            let testarea = document.createElement('div');
+            testarea.id = 'debugger-' + picker.select.dataset['id'] + '-testarea';
+            testarea.style.position = 'relative';
+            picker.dropdown.prepend(testarea);
+            this.debugRender();
+        }
 
         let button = this.button;
         let observer = new MutationObserver(function(mutations) {
@@ -197,12 +204,14 @@ class ezmodusSelectPicker {
     };
 
     /** only for debugging */
-    testRender() {
-        if(!this.dropdown || this.select.id != 'optgroup-single') {
+    debugRender() {
+        if(!this.dropdown) {
             return;
         }
         let picker = this;
-        let testarea = document.getElementById(picker.select.id+'-testarea');
+        let testarea = document.getElementById(
+            'debugger-' + picker.select.dataset['id'] + '-testarea'
+        );
         if(!testarea) {
             return;
         }
@@ -340,6 +349,9 @@ class ezmodusSelectPicker {
         // close automatically if not multiple select
         if(!picker.settings.multiple) {
             picker.dropdown.classList.remove('open-menu');
+        }
+        if(picker.settings.debug) {
+            picker.debugRender();
         }
     }
 
@@ -606,8 +618,14 @@ class ezmodusSelectPicker {
         picker.items.forEach((data) => {
             let is_group_included = search_from_group(data, group_inclusion);
             let is_group_excluded = search_from_group(data, group_exclusion);
+            
             data.items.forEach((i) => {
-                if(inclusion.length === 0 && exclusion.length === 0) {
+                if(
+                    inclusion.length === 0 && 
+                    exclusion.length === 0 && 
+                    group_inclusion.length === 0 && 
+                    group_exclusion.length === 0
+                ) {
                     i.visible = true;
                     data.match = data.total;
                     return;
@@ -615,25 +633,43 @@ class ezmodusSelectPicker {
                 let is_included = search_from_item(i, inclusion);
                 let is_excluded = search_from_item(i, exclusion);
                 i.visible = true;
-
-                if(is_group_included) {
-                    i.visible = true;
+                // if any group rules set handle these separately
+                if(group_inclusion.length !== 0 || group_exclusion.length !== 0) {
+                    if(is_group_excluded) {
+                        i.visible = false;
+                        return;
+                    }
+                    if(group_inclusion.length > 0 && !is_group_included) {
+                        i.visible = false;
+                        return;
+                    }
+                    if(exclusion.length > 0 && is_excluded) {
+                        i.visible = false;
+                    }
+                    if(inclusion.length > 0 && is_included) {
+                        i.visible = true;
+                    }
                 }
-                if(!is_included) {
-                    i.visible = false;
-                }
-                if(is_excluded) {
-                    i.visible = false;
-                }
-                if(is_group_excluded) {
-                    i.visible = false;
+                // no group rules set then do direct checks
+                else {
+                    if(inclusion.length > 0 && !is_included) {
+                        i.visible = false;
+                    }
+                    if(inclusion.length > 0 && is_included) {
+                        i.visible = true;
+                    }
+                    if(exclusion.length > 0 && is_excluded) {
+                        i.visible = false;
+                    }
                 }
             });
             let viscount = data.items.filter((o) => o.visible === true).length;
             data.match = viscount;
         });
         picker.updateMenu();
-        // picker.testRender();
+        if(picker.settings.debug) {
+            picker.debugRender();
+        }
     }
 
     /** only for debugging */
@@ -866,6 +902,24 @@ class ezmodusSelectPicker {
             let menu = dropdown.querySelector('.ezmodus-menu ul');
             menu.style.maxHeight = this.settings.menuHeight + 2 + 'px';
         }
+        // calculate element width inside the menu
+        let longestWidth = 0;
+        picker.items.forEach((data) => {
+            if(data.group) {
+                let elemwidth = picker.calculateContextWidth(data.listelem);
+                if(elemwidth > longestWidth) {
+                    longestWidth = elemwidth;
+                }
+            }
+            data.items.forEach((i) => {
+                let elemwidth = picker.calculateContextWidth(i.listelem);
+                if(elemwidth > longestWidth) {
+                    longestWidth = elemwidth;
+                }
+            });
+        });
+        picker.settings.calcMenuWidth = parseInt(longestWidth);
+
         // calculate dynamic width
         if(picker.settings.menuDynamic) {
             // calculate first extra margins, paddings and rest of the content

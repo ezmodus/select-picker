@@ -1,5 +1,9 @@
 # Release notes
 
+## 1.0.17, April 29, 2025
+
+    Tweaks on search and also optional data-debug setting to use debugRender. Which renders items to see changes.
+
 ## 1.0.16, April 29, 2025
 
     Search includes now optgroups. If optgroup name is excluded all items are also excluded.

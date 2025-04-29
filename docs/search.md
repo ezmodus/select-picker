@@ -90,6 +90,10 @@ list: {
 search: "a --am"
 // This would only return items which has letter "a" in it, but excludes group which has "am" in it.
 // This means that only return british values like "Alfa romeo" and "Jaguar".
+
+// on group exclusions all items are always blocked
+// items which are not in group inclusions are also blocked
+// then rest which are normally excluded are done except if they are included
 ```
 
 ---
